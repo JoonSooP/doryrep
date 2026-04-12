@@ -37,8 +37,18 @@ export function AppHeader() {
   return (
     <header className="bg-white border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="font-bold text-lg text-gray-900">
-          ProjectHub
+        <Link href="/" className="font-bold text-lg flex items-center gap-2">
+          {process.env.NEXT_PUBLIC_VERCEL ? (
+            <>
+              <span className="px-1.5 py-0.5 rounded bg-blue-600 text-white text-xs">CLOUD</span>
+              <span className="text-gray-900">ProjectHub</span>
+            </>
+          ) : (
+            <>
+              <span className="px-1.5 py-0.5 rounded bg-green-600 text-white text-xs">LOCAL</span>
+              <span className="text-gray-900">ProjectHub</span>
+            </>
+          )}
         </Link>
         <nav className="flex items-center gap-4">
           <Link href="/" className="text-sm text-gray-600 hover:text-gray-900">
