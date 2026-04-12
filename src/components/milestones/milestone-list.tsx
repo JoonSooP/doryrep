@@ -114,9 +114,11 @@ const LANE_HEIGHT = BAR_HEIGHT + BAR_GAP;
 const CATEGORY_PADDING = 8;
 const LEFT_WIDTH = 160;
 
+type DragMode = "move" | "resize-left" | "resize-right";
+
 type DragState = {
   id: string;
-  mode: "move" | "resize-left" | "resize-right";
+  mode: DragMode;
   origStartDate: string;
   origEndDate: string;
   startX: number;
@@ -217,7 +219,7 @@ export function MilestoneList({ projectId }: { projectId: string }) {
   const getRowHeight = (laneCount: number) => laneCount * LANE_HEIGHT + CATEGORY_PADDING * 2;
 
   // --- 드래그 핸들러 ---
-  const handleDragStart = (e: React.MouseEvent, id: string, mode: DragState["mode"]) => {
+  const handleDragStart = (e: React.MouseEvent, id: string, mode: DragMode) => {
     e.preventDefault();
     e.stopPropagation();
     const m = milestones.find((x) => x.id === id);

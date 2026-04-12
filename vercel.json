@@ -1,8 +1,5 @@
 {
   "buildCommand": "npx prisma generate && next build",
   "framework": "nextjs",
-  "regions": ["icn1"],
-  "env": {
-    "DATABASE_URL": "@database-url"
-  }
+  "regions": ["icn1"]
 }
