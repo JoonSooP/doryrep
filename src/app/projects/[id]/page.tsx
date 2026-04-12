@@ -7,12 +7,14 @@ import { MilestoneList } from "@/components/milestones/milestone-list";
 import { WeeklyReport } from "@/components/weekly/weekly-report";
 import { KanbanBoard } from "@/components/board/kanban-board";
 import { DemoList } from "@/components/demos/demo-list";
+import { IssueList } from "@/components/issues/issue-list";
 
-type Tab = "milestone" | "weekly" | "kanban" | "demo";
+type Tab = "milestone" | "weekly" | "issue" | "kanban" | "demo";
 
 const TABS: { key: Tab; label: string }[] = [
   { key: "milestone", label: "프로젝트 일정" },
   { key: "weekly", label: "Weekly" },
+  { key: "issue", label: "Issue Mgmt" },
   { key: "kanban", label: "칸반보드" },
   { key: "demo", label: "시연" },
 ];
@@ -56,6 +58,7 @@ export default function ProjectPage() {
 
       {tab === "milestone" && <MilestoneList projectId={id} />}
       {tab === "weekly" && <WeeklyReport projectId={id} />}
+      {tab === "issue" && <IssueList projectId={id} />}
       {tab === "kanban" && <KanbanBoard projectId={id} />}
       {tab === "demo" && <DemoList projectId={id} />}
     </div>

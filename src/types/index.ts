@@ -21,6 +21,27 @@ export type TaskWithAssignee = {
   updatedAt: string;
 };
 
+export type Issue = {
+  id: string;
+  number: number;
+  category: string;
+  registeredAt: string;
+  issueCode: string;
+  description: string;
+  issueType: string;
+  assignee: string;
+  responsible: string;
+  result: string;
+  status: string;
+  planStartDate: string | null;
+  planEndDate: string | null;
+  actualStartDate: string | null;
+  actualEndDate: string | null;
+  projectId: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type Project = {
   id: string;
   name: string;

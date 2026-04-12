@@ -29,6 +29,7 @@ model Project {
   demos          Demo[]
   milestones     Milestone[]
   weeklyReports  WeeklyReport[]
+  issues         Issue[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 }
@@ -101,6 +102,28 @@ model Application {
   demos     Demo[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Issue {
+  id              String   @id @default(cuid())
+  number          Int      @default(0)
+  category        String   @default("")
+  registeredAt    String
+  issueCode       String   @default("")
+  description     String   @default("")
+  issueType       String   @default("이슈")
+  assignee        String   @default("")
+  responsible     String   @default("")
+  result          String   @default("")
+  status          String   @default("Open")
+  planStartDate   String?
+  planEndDate     String?
+  actualStartDate String?
+  actualEndDate   String?
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Task {
