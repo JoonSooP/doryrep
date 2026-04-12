@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String   @id @default(cuid())
+  loginId            String   @unique
+  name               String
+  email              String   @unique
+  password           String
+  role               String   @default("Viewer")
+  mustChangePassword Boolean  @default(true)
+  avatar             String?
+  tasks              Task[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Project {
+  id             String         @id @default(cuid())
+  name           String
+  description    String?
+  tasks          Task[]
+  demos          Demo[]
+  milestones     Milestone[]
+  weeklyReports  WeeklyReport[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model Milestone {
+  id            String        @id @default(cuid())
+  title         String
+  assignee      String?
+  color         String?
+  startDate     String?
+  endDate       String?
+  priority      String        @default("중")
+  progress      Int           @default(0)
+  order         Int           @default(0)
+  parent        Milestone?    @relation("MilestoneTree", fields: [parentId], references: [id])
+  parentId      String?
+  children      Milestone[]   @relation("MilestoneTree")
+  weeklyEntries WeeklyEntry[]
+  project       Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model WeeklyReport {
+  id        String        @id @default(cuid())
+  weekDate  String
+  weekLabel String
+  project   Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  entries   WeeklyEntry[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model WeeklyEntry {
+  id          String       @id @default(cuid())
+  lastWeek    String       @default("")
+  thisWeek    String       @default("")
+  issues      String       @default("")
+  issueIds    String       @default("")
+  report      WeeklyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  reportId    String
+  milestone   Milestone    @relation(fields: [milestoneId], references: [id])
+  milestoneId String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Demo {
+  id            String       @id @default(cuid())
+  title         String
+  scenario      String       @default("")
+  type          String       @default("link")
+  link          String?
+  application   Application? @relation(fields: [applicationId], references: [id])
+  applicationId String?
+  order         Int          @default(0)
+  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Application {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  command   String
+  icon      String?
+  demos     Demo[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  status      String   @default("TODO")
+  order       Int      @default(0)
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId   String
+  assignee    User?    @relation(fields: [assigneeId], references: [id])
+  assigneeId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
