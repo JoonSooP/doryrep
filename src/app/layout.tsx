@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/auth-context";
+import { ThemeProvider } from "@/contexts/theme-context";
 import { AppHeader } from "@/components/ui/app-header";
 
 const geistSans = Geist({
@@ -20,11 +21,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${geistSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-gray-50 font-[family-name:var(--font-geist-sans)]">
+    <html lang="ko" className={`${geistSans.variable} h-full antialiased`} suppressHydrationWarning>
+      <body className="min-h-full flex flex-col bg-gray-50 dark:bg-gray-900 font-[family-name:var(--font-geist-sans)]">
         <AuthProvider>
-          <AppHeader />
-          <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">{children}</main>
+          <ThemeProvider>
+            <AppHeader />
+            <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">{children}</main>
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>

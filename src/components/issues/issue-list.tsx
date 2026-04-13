@@ -153,7 +153,7 @@ export function IssueList({ projectId }: { projectId: string }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-800">이슈_Action Item 관리대장</h2>
+        <h2 className="text-lg font-bold text-gray-800 dark:text-white">이슈_Action Item 관리대장</h2>
         {canEdit && (
           <button onClick={openCreate} className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
             + 이슈 등록
@@ -161,10 +161,10 @@ export function IssueList({ projectId }: { projectId: string }) {
         )}
       </div>
 
-      <div className="overflow-x-auto border rounded-lg">
-        <table className="w-full text-sm border-collapse min-w-[1400px]">
+      <div className="overflow-x-auto border dark:border-gray-700 rounded-lg">
+        <table className="w-full text-sm border-collapse min-w-[1400px] dark:text-gray-300">
           <thead>
-            <tr className="bg-amber-100 text-gray-700">
+            <tr className="bg-amber-100 dark:bg-amber-900/40 text-gray-700 dark:text-gray-200">
               <th className="border px-2 py-2 text-center" rowSpan={2}>대분류</th>
               <th className="border px-2 py-2 text-center" rowSpan={2}>등록일</th>
               <th className="border px-2 py-2 text-center" rowSpan={2}>이슈ID</th>
@@ -178,7 +178,7 @@ export function IssueList({ projectId }: { projectId: string }) {
               <th className="border px-2 py-2 text-center" rowSpan={2}>상태</th>
               {canEdit && <th className="border px-2 py-2 text-center" rowSpan={2}>관리</th>}
             </tr>
-            <tr className="bg-amber-50 text-gray-600">
+            <tr className="bg-amber-50 dark:bg-amber-900/20 text-gray-600 dark:text-gray-400">
               <th className="border px-2 py-1 text-center text-xs">시작일</th>
               <th className="border px-2 py-1 text-center text-xs">종료일</th>
               <th className="border px-2 py-1 text-center text-xs">시작일</th>
@@ -188,9 +188,9 @@ export function IssueList({ projectId }: { projectId: string }) {
           <tbody>
             {Object.entries(grouped).map(([category, catIssues]) =>
               catIssues.map((issue, idx) => (
-                <tr key={issue.id} className="hover:bg-gray-50">
+                <tr key={issue.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                   {idx === 0 && (
-                    <td className="border px-2 py-2 text-center text-xs font-medium bg-gray-50 align-middle" rowSpan={catIssues.length}>
+                    <td className="border dark:border-gray-700 px-2 py-2 text-center text-xs font-medium bg-gray-50 dark:bg-gray-800 align-middle" rowSpan={catIssues.length}>
                       {category}
                     </td>
                   )}
@@ -236,10 +236,10 @@ export function IssueList({ projectId }: { projectId: string }) {
         <div className="space-y-3">
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">대분류</label>
+              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">대분류</label>
               {customCategory ? (
                 <div className="flex gap-1">
-                  <input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="대분류 직접 입력" />
+                  <input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" placeholder="대분류 직접 입력" />
                   <button type="button" onClick={() => setCustomCategory(false)} className="px-2 text-xs text-gray-500 hover:text-gray-700 whitespace-nowrap">목록</button>
                 </div>
               ) : (
@@ -247,7 +247,7 @@ export function IssueList({ projectId }: { projectId: string }) {
                   <select value={form.category} onChange={(e) => {
                     if (e.target.value === "__custom__") { setCustomCategory(true); setForm({ ...form, category: "" }); }
                     else setForm({ ...form, category: e.target.value });
-                  }} className="w-full border rounded-lg px-3 py-2 text-sm">
+                  }} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100">
                     <option value="">선택</option>
                     {categories.map((c) => <option key={c} value={c}>{c}</option>)}
                     {!categories.includes("PMO") && <option value="PMO">PMO</option>}
@@ -257,81 +257,81 @@ export function IssueList({ projectId }: { projectId: string }) {
               )}
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">이슈ID</label>
-              <input value={form.issueCode} onChange={(e) => setForm({ ...form, issueCode: e.target.value })} className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="예: B-0317-001" />
+              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">이슈ID</label>
+              <input value={form.issueCode} onChange={(e) => setForm({ ...form, issueCode: e.target.value })} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" placeholder="예: B-0317-001" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">등록일</label>
-              <input type="date" value={form.registeredAt} onChange={(e) => setForm({ ...form, registeredAt: e.target.value })} className="w-full border rounded-lg px-3 py-2 text-sm" />
+              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">등록일</label>
+              <input type="date" value={form.registeredAt} onChange={(e) => setForm({ ...form, registeredAt: e.target.value })} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">내역</label>
-            <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full border rounded-lg px-3 py-2 text-sm" rows={3} />
+            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">내역</label>
+            <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" rows={3} />
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">구분</label>
-              <select value={form.issueType} onChange={(e) => setForm({ ...form, issueType: e.target.value })} className="w-full border rounded-lg px-3 py-2 text-sm">
+              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">구분</label>
+              <select value={form.issueType} onChange={(e) => setForm({ ...form, issueType: e.target.value })} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100">
                 {ISSUE_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">조치담당자</label>
-              <input value={form.assignee} onChange={(e) => setForm({ ...form, assignee: e.target.value })} className="w-full border rounded-lg px-3 py-2 text-sm" />
+              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">조치담당자</label>
+              <input value={form.assignee} onChange={(e) => setForm({ ...form, assignee: e.target.value })} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">현업담당자</label>
-              <input value={form.responsible} onChange={(e) => setForm({ ...form, responsible: e.target.value })} className="w-full border rounded-lg px-3 py-2 text-sm" />
+              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">현업담당자</label>
+              <input value={form.responsible} onChange={(e) => setForm({ ...form, responsible: e.target.value })} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">처리 결과</label>
-              <textarea value={form.result} onChange={(e) => setForm({ ...form, result: e.target.value })} className="w-full border rounded-lg px-3 py-2 text-sm" rows={2} />
+              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">처리 결과</label>
+              <textarea value={form.result} onChange={(e) => setForm({ ...form, result: e.target.value })} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" rows={2} />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">상태</label>
-              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="w-full border rounded-lg px-3 py-2 text-sm">
+              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">상태</label>
+              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100">
                 {ISSUE_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <div className="border rounded-lg p-3 bg-gray-50">
-              <p className="text-xs font-medium text-gray-500 mb-2">계획</p>
+            <div className="border dark:border-gray-600 rounded-lg p-3 bg-gray-50 dark:bg-gray-900">
+              <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">계획</p>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">시작일</label>
-                  <input type="date" value={form.planStartDate} onChange={(e) => setForm({ ...form, planStartDate: e.target.value })} className="w-full border rounded px-2 py-1.5 text-sm" />
+                  <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">시작일</label>
+                  <input type="date" value={form.planStartDate} onChange={(e) => setForm({ ...form, planStartDate: e.target.value })} className="w-full border dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">종료일</label>
-                  <input type="date" value={form.planEndDate} onChange={(e) => setForm({ ...form, planEndDate: e.target.value })} className="w-full border rounded px-2 py-1.5 text-sm" />
+                  <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">종료일</label>
+                  <input type="date" value={form.planEndDate} onChange={(e) => setForm({ ...form, planEndDate: e.target.value })} className="w-full border dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" />
                 </div>
               </div>
             </div>
-            <div className="border rounded-lg p-3 bg-gray-50">
-              <p className="text-xs font-medium text-gray-500 mb-2">실적</p>
+            <div className="border dark:border-gray-600 rounded-lg p-3 bg-gray-50 dark:bg-gray-900">
+              <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">실적</p>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">시작일</label>
-                  <input type="date" value={form.actualStartDate} onChange={(e) => setForm({ ...form, actualStartDate: e.target.value })} className="w-full border rounded px-2 py-1.5 text-sm" />
+                  <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">시작일</label>
+                  <input type="date" value={form.actualStartDate} onChange={(e) => setForm({ ...form, actualStartDate: e.target.value })} className="w-full border dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">종료일</label>
-                  <input type="date" value={form.actualEndDate} onChange={(e) => setForm({ ...form, actualEndDate: e.target.value })} className="w-full border rounded px-2 py-1.5 text-sm" />
+                  <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">종료일</label>
+                  <input type="date" value={form.actualEndDate} onChange={(e) => setForm({ ...form, actualEndDate: e.target.value })} className="w-full border dark:border-gray-600 rounded px-2 py-1.5 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" />
                 </div>
               </div>
             </div>
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
-            <button onClick={() => setModalOpen(false)} className="px-4 py-2 text-sm text-gray-600 border rounded-lg hover:bg-gray-50">취소</button>
+            <button onClick={() => setModalOpen(false)} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 border dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">취소</button>
             <button onClick={handleSave} className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">{editing ? "수정" : "등록"}</button>
           </div>
         </div>

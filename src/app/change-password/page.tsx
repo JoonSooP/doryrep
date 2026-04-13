@@ -14,7 +14,7 @@ function PwInput({ value, onChange, autoFocus, placeholder }: {
         type={show ? "text" : "password"}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full border rounded-lg px-3 py-2.5 pr-10 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+        className="w-full border dark:border-gray-600 rounded-lg px-3 py-2.5 pr-10 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
         autoFocus={autoFocus}
         placeholder={placeholder}
       />
@@ -22,9 +22,9 @@ function PwInput({ value, onChange, autoFocus, placeholder }: {
         type="button"
         onClick={() => setShow(!show)}
         tabIndex={-1}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm"
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-sm"
       >
-        {show ? "🙈" : "👁"}
+        {show ? "\uD83D\uDE48" : "\uD83D\uDC41"}
       </button>
     </div>
   );
@@ -67,12 +67,12 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
       <div className="w-full max-w-sm">
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <h1 className="text-xl font-bold text-center text-gray-900 mb-1">비밀번호 변경</h1>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
+          <h1 className="text-xl font-bold text-center text-gray-900 dark:text-white mb-1">비밀번호 변경</h1>
           {user?.mustChangePassword && (
-            <p className="text-sm text-amber-600 bg-amber-50 rounded-lg px-3 py-2 mb-4 text-center">
+            <p className="text-sm text-amber-600 bg-amber-50 dark:bg-amber-900/30 rounded-lg px-3 py-2 mb-4 text-center">
               최초 로그인입니다. 비밀번호를 변경해 주세요.
             </p>
           )}
@@ -82,18 +82,18 @@ export default function ChangePasswordPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <p className="text-sm text-red-500 bg-red-50 rounded-lg px-3 py-2">{error}</p>
+              <p className="text-sm text-red-500 bg-red-50 dark:bg-red-900/30 rounded-lg px-3 py-2">{error}</p>
             )}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">현재 비밀번호</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">현재 비밀번호</label>
               <PwInput value={currentPassword} onChange={setCurrentPassword} autoFocus />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">새 비밀번호</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">새 비밀번호</label>
               <PwInput value={newPassword} onChange={setNewPassword} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">새 비밀번호 확인</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">새 비밀번호 확인</label>
               <PwInput value={confirmPassword} onChange={setConfirmPassword} />
             </div>
             <button

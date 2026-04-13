@@ -60,44 +60,44 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
       <div className="w-full max-w-sm">
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <h1 className="text-2xl font-bold text-center text-gray-900 mb-1">ProjectHub</h1>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
+          <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-1">ProjectHub</h1>
           <p className="text-sm text-gray-400 text-center mb-8">프로젝트 관리 시스템</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <p className="text-sm text-red-500 bg-red-50 rounded-lg px-3 py-2">{error}</p>
+              <p className="text-sm text-red-500 bg-red-50 dark:bg-red-900/30 rounded-lg px-3 py-2">{error}</p>
             )}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">아이디</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">아이디</label>
               <input
                 value={loginId}
                 onChange={(e) => setLoginId(e.target.value)}
-                className="w-full border rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full border dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                 placeholder="아이디 입력"
                 autoFocus
               />
               <p className="text-xs text-gray-400 mt-1">이메일에서 @sk.com을 제외한 것이 ID입니다.</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">비밀번호</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">비밀번호</label>
               <div className="relative">
                 <input
                   type={showPw ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full border rounded-lg px-3 py-2.5 pr-10 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full border dark:border-gray-600 rounded-lg px-3 py-2.5 pr-10 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                   placeholder="비밀번호 입력"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPw(!showPw)}
                   tabIndex={-1}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-sm"
                 >
-                  {showPw ? "🙈" : "👁"}
+                  {showPw ? "\uD83D\uDE48" : "\uD83D\uDC41"}
                 </button>
               </div>
             </div>
@@ -108,7 +108,7 @@ export default function LoginPage() {
                 onChange={(e) => setSaveId(e.target.checked)}
                 className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-sm text-gray-600">로그인 ID 저장</span>
+              <span className="text-sm text-gray-600 dark:text-gray-300">로그인 ID 저장</span>
             </label>
             <button
               type="submit"

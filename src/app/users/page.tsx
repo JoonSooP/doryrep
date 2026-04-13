@@ -89,7 +89,7 @@ export default function UsersPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">사용자 관리</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">사용자 관리</h1>
         {isAdmin && (
           <button onClick={openCreate} className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
             + 새 사용자
@@ -102,10 +102,10 @@ export default function UsersPage() {
           <p className="text-lg mb-2">등록된 사용자가 없습니다</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border dark:border-gray-700 overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b bg-gray-50 text-left text-gray-500">
+              <tr className="border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-left text-gray-500 dark:text-gray-400">
                 <th className="px-5 py-3 font-medium">ID</th>
                 <th className="px-5 py-3 font-medium">이름</th>
                 <th className="px-5 py-3 font-medium text-center">권한</th>
@@ -116,21 +116,21 @@ export default function UsersPage() {
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user.id} className="border-b last:border-b-0 hover:bg-gray-50">
-                  <td className="px-5 py-3 font-mono text-gray-700">{user.loginId}</td>
+                <tr key={user.id} className="border-b dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                  <td className="px-5 py-3 font-mono text-gray-700 dark:text-gray-300">{user.loginId}</td>
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-2">
-                      <span className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-medium">
+                      <span className="w-7 h-7 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 text-xs flex items-center justify-center font-medium">
                         {user.name[0]}
                       </span>
-                      <span className="font-medium text-gray-900">{user.name}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{user.name}</span>
                     </div>
                   </td>
                   <td className="px-5 py-3 text-center">
                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                      user.role === "Admin" ? "bg-red-100 text-red-700" :
-                      user.role === "Editor" ? "bg-blue-100 text-blue-700" :
-                      "bg-gray-100 text-gray-600"
+                      user.role === "Admin" ? "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400" :
+                      user.role === "Editor" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400" :
+                      "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300"
                     }`}>
                       {user.role}
                     </span>
@@ -142,7 +142,7 @@ export default function UsersPage() {
                       <span className="text-xs text-green-600">정상</span>
                     )}
                   </td>
-                  <td className="px-5 py-3 text-center text-gray-500">{user._count?.tasks ?? 0}개</td>
+                  <td className="px-5 py-3 text-center text-gray-500 dark:text-gray-400">{user._count?.tasks ?? 0}개</td>
                   {isAdmin && (
                     <td className="px-5 py-3 text-right">
                       <button onClick={() => openEdit(user)} className="text-blue-500 hover:text-blue-700 text-xs mr-2">수정</button>
@@ -159,30 +159,30 @@ export default function UsersPage() {
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editingUser ? "사용자 수정" : "새 사용자"}>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {error && <p className="text-sm text-red-500 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
+          {error && <p className="text-sm text-red-500 bg-red-50 dark:bg-red-900/30 rounded-lg px-3 py-2">{error}</p>}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">ID</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ID</label>
             <input
               value={loginId}
               onChange={(e) => setLoginId(e.target.value)}
               disabled={!!editingUser}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none disabled:bg-gray-100"
+              className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none disabled:bg-gray-100 dark:disabled:bg-gray-600"
               placeholder="로그인 ID"
               autoFocus
             />
             {!editingUser && <p className="text-xs text-gray-400 mt-1">초기 비밀번호는 ID와 동일하게 설정됩니다</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">이름</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">이름</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               placeholder="이름"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">권한</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">권한</label>
             <div className="flex gap-2">
               {ROLES.map((r) => (
                 <button
@@ -191,10 +191,10 @@ export default function UsersPage() {
                   onClick={() => setRole(r)}
                   className={`flex-1 py-2 text-sm rounded-lg border transition-colors ${
                     role === r
-                      ? r === "Admin" ? "bg-red-50 border-red-300 text-red-700 font-medium"
-                        : r === "Editor" ? "bg-blue-50 border-blue-300 text-blue-700 font-medium"
-                        : "bg-gray-50 border-gray-300 text-gray-700 font-medium"
-                      : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
+                      ? r === "Admin" ? "bg-red-50 dark:bg-red-900/30 border-red-300 dark:border-red-700 text-red-700 dark:text-red-400 font-medium"
+                        : r === "Editor" ? "bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-400 font-medium"
+                        : "bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium"
+                      : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
                   }`}
                 >
                   {r}
@@ -203,21 +203,21 @@ export default function UsersPage() {
             </div>
           </div>
           <div className="flex justify-end gap-2 pt-2">
-            <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">취소</button>
+            <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">취소</button>
             <button type="submit" className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">{editingUser ? "수정" : "추가"}</button>
           </div>
         </form>
       </Modal>
 
       <Modal open={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="사용자 삭제">
-        <p className="text-sm text-gray-600 mb-1"><strong>{deleteTarget?.name}</strong>({deleteTarget?.loginId})을 삭제하시겠습니까?</p>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mb-1"><strong>{deleteTarget?.name}</strong>({deleteTarget?.loginId})을 삭제하시겠습니까?</p>
         {(deleteTarget?._count?.tasks ?? 0) > 0 && (
-          <p className="text-sm text-amber-600 bg-amber-50 rounded-lg px-3 py-2 mb-4">
+          <p className="text-sm text-amber-600 bg-amber-50 dark:bg-amber-900/30 rounded-lg px-3 py-2 mb-4">
             배정된 태스크 {deleteTarget?._count?.tasks}개가 미지정으로 변경됩니다.
           </p>
         )}
         <div className="flex justify-end gap-2 pt-2">
-          <button onClick={() => setDeleteTarget(null)} className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">취소</button>
+          <button onClick={() => setDeleteTarget(null)} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">취소</button>
           <button onClick={confirmDelete} className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700">삭제</button>
         </div>
       </Modal>

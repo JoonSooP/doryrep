@@ -13,16 +13,16 @@ function PwInput({ value, onChange, placeholder }: {
         type={show ? "text" : "password"}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full border rounded-lg px-3 py-2 pr-10 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+        className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 pr-10 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
         placeholder={placeholder}
       />
       <button
         type="button"
         onClick={() => setShow(!show)}
         tabIndex={-1}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm"
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-sm"
       >
-        {show ? "🙈" : "👁"}
+        {show ? "\uD83D\uDE48" : "\uD83D\uDC41"}
       </button>
     </div>
   );
@@ -72,26 +72,26 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">설정</h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">설정</h1>
 
       {/* 내 정보 */}
-      <div className="bg-white border rounded-xl p-6 mb-6">
-        <h2 className="text-sm font-semibold text-gray-700 mb-4">내 정보</h2>
+      <div className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-6 mb-6">
+        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">내 정보</h2>
         <div className="space-y-3 text-sm">
           <div className="flex items-center">
             <span className="w-20 text-gray-400">ID</span>
-            <span className="font-mono text-gray-700">{user.loginId}</span>
+            <span className="font-mono text-gray-700 dark:text-gray-200">{user.loginId}</span>
           </div>
           <div className="flex items-center">
             <span className="w-20 text-gray-400">이름</span>
-            <span className="text-gray-700">{user.name}</span>
+            <span className="text-gray-700 dark:text-gray-200">{user.name}</span>
           </div>
           <div className="flex items-center">
             <span className="w-20 text-gray-400">권한</span>
             <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-              user.role === "Admin" ? "bg-red-100 text-red-700" :
-              user.role === "Editor" ? "bg-blue-100 text-blue-700" :
-              "bg-gray-100 text-gray-600"
+              user.role === "Admin" ? "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400" :
+              user.role === "Editor" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400" :
+              "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300"
             }`}>
               {user.role}
             </span>
@@ -100,23 +100,23 @@ export default function SettingsPage() {
       </div>
 
       {/* 비밀번호 변경 */}
-      <div className="bg-white border rounded-xl p-6">
-        <h2 className="text-sm font-semibold text-gray-700 mb-1">비밀번호 변경</h2>
+      <div className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-6">
+        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">비밀번호 변경</h2>
         <p className="text-xs text-gray-400 mb-4">대/소문자, 숫자, 특수문자 포함 8자 이상</p>
 
         <form onSubmit={handleChangePw} className="space-y-4">
-          {error && <p className="text-sm text-red-500 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
-          {success && <p className="text-sm text-green-600 bg-green-50 rounded-lg px-3 py-2">{success}</p>}
+          {error && <p className="text-sm text-red-500 bg-red-50 dark:bg-red-900/30 rounded-lg px-3 py-2">{error}</p>}
+          {success && <p className="text-sm text-green-600 bg-green-50 dark:bg-green-900/30 rounded-lg px-3 py-2">{success}</p>}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">현재 비밀번호</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">현재 비밀번호</label>
             <PwInput value={currentPassword} onChange={setCurrentPassword} />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">새 비밀번호</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">새 비밀번호</label>
             <PwInput value={newPassword} onChange={setNewPassword} />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">새 비밀번호 확인</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">새 비밀번호 확인</label>
             <PwInput value={confirmPassword} onChange={setConfirmPassword} />
           </div>
           <button

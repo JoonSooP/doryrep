@@ -175,7 +175,7 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
                 e.target.value = "";
               }}
               value=""
-              className="border rounded-lg px-3 py-1.5 text-sm text-gray-600 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+              className="border dark:border-gray-600 rounded-lg px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
             >
               <option value="">주차 삭제</option>
               {[...reports].sort((a, b) => a.weekDate.localeCompare(b.weekDate)).map((r) => (
@@ -195,7 +195,7 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
       </div>
 
       {parents.length === 0 ? (
-        <div className="text-center py-12 text-gray-400 bg-gray-50 rounded-xl">
+        <div className="text-center py-12 text-gray-400 bg-gray-50 dark:bg-gray-800 rounded-xl">
           <p className="mb-1">대분류가 없습니다</p>
           <p className="text-sm">프로젝트 일정에서 대분류를 먼저 추가해 주세요</p>
         </div>
@@ -204,11 +204,11 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
           {categoryWeeklies.map(({ parent, cs, weeklyRows }) => {
             const isExpanded = expandedCategories[parent.id] ?? false;
             return (
-              <div key={parent.id} className="bg-white border rounded-xl overflow-hidden">
+              <div key={parent.id} className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl overflow-hidden">
                 {/* 대분류 헤더 */}
                 <button
                   onClick={() => toggleCategory(parent.id)}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   style={{ backgroundColor: cs.bg }}
                 >
                   <span className="text-gray-400 text-xs">{isExpanded ? "▼" : "▶"}</span>
@@ -221,13 +221,13 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
                 {/* 주차별 테이블 */}
                 {isExpanded && (
                   weeklyRows.length === 0 ? (
-                    <div className="text-center py-6 text-gray-400 text-sm border-t">
+                    <div className="text-center py-6 text-gray-400 text-sm border-t dark:border-gray-700">
                       등록된 주간 보고가 없습니다. 주차를 추가해 주세요.
                     </div>
                   ) : (
-                    <table className="w-full text-sm border-collapse border-t">
+                    <table className="w-full text-sm border-collapse border-t dark:border-gray-700">
                       <thead>
-                        <tr className="bg-gray-50 border-b text-gray-600">
+                        <tr className="bg-gray-50 dark:bg-gray-900 border-b dark:border-gray-700 text-gray-600 dark:text-gray-400">
                           <th
                             className="px-3 py-2 font-semibold text-left w-28 border-r cursor-pointer hover:bg-gray-100 select-none"
                             onClick={() => setSortOrder((o) => o === "desc" ? "asc" : "desc")}
@@ -252,8 +252,8 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
                       </thead>
                       <tbody>
                         {weeklyRows.map(({ report, entry }) => (
-                          <tr key={entry.id} className="border-b last:border-b-0 hover:bg-gray-50/50">
-                            <td className="px-3 py-2 border-r align-top text-gray-700">
+                          <tr key={entry.id} className="border-b dark:border-gray-700 last:border-b-0 hover:bg-gray-50/50 dark:hover:bg-gray-700/30">
+                            <td className="px-3 py-2 border-r dark:border-gray-700 align-top text-gray-700 dark:text-gray-300">
                               <div className="flex items-center justify-between">
                                 <span className="text-xs font-medium">{report.weekDate}</span>
                                 {canEdit && (
@@ -266,33 +266,33 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
                                 )}
                               </div>
                             </td>
-                            <td className="px-3 py-2 border-r align-top font-semibold text-gray-700 text-xs">
+                            <td className="px-3 py-2 border-r dark:border-gray-700 align-top font-semibold text-gray-700 dark:text-gray-300 text-xs">
                               {report.weekLabel}
                             </td>
-                            <td className="px-1 py-1 border-r align-top">
+                            <td className="px-1 py-1 border-r dark:border-gray-700 align-top">
                               <textarea
                                 value={entry.lastWeek}
                                 onChange={(e) => handleEntryChange(entry.id, "lastWeek", e.target.value)}
                                 readOnly={!canEdit}
-                                className={`w-full text-xs text-gray-700 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[140px] ${canEdit ? "focus:bg-yellow-50" : "cursor-default"}`}
+                                className={`w-full text-xs text-gray-700 dark:text-gray-300 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[140px] ${canEdit ? "focus:bg-yellow-50" : "cursor-default"}`}
                                 placeholder="· 실적 내용"
                               />
                             </td>
-                            <td className="px-1 py-1 border-r align-top">
+                            <td className="px-1 py-1 border-r dark:border-gray-700 align-top">
                               <textarea
                                 value={entry.thisWeek}
                                 onChange={(e) => handleEntryChange(entry.id, "thisWeek", e.target.value)}
                                 readOnly={!canEdit}
-                                className={`w-full text-xs text-gray-700 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[140px] ${canEdit ? "focus:bg-green-50" : "cursor-default"}`}
+                                className={`w-full text-xs text-gray-700 dark:text-gray-300 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[140px] ${canEdit ? "focus:bg-green-50" : "cursor-default"}`}
                                 placeholder="· 계획 내용"
                               />
                             </td>
-                            <td className="px-1 py-1 border-r align-top">
+                            <td className="px-1 py-1 border-r dark:border-gray-700 align-top">
                               <textarea
                                 value={entry.issues}
                                 onChange={(e) => handleEntryChange(entry.id, "issues", e.target.value)}
                                 readOnly={!canEdit}
-                                className={`w-full text-xs text-gray-700 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[140px] ${canEdit ? "focus:bg-red-50" : "cursor-default"}`}
+                                className={`w-full text-xs text-gray-700 dark:text-gray-300 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[140px] ${canEdit ? "focus:bg-red-50" : "cursor-default"}`}
                                 placeholder="· 이슈 내용"
                               />
                             </td>
@@ -301,7 +301,7 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
                                 value={entry.issueIds}
                                 onChange={(e) => handleEntryChange(entry.id, "issueIds", e.target.value)}
                                 readOnly={!canEdit}
-                                className={`w-full text-xs text-gray-700 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[140px] ${canEdit ? "focus:bg-blue-50" : "cursor-default"}`}
+                                className={`w-full text-xs text-gray-700 dark:text-gray-300 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[140px] ${canEdit ? "focus:bg-blue-50" : "cursor-default"}`}
                                 placeholder="PMO-0000-000"
                               />
                             </td>
@@ -321,21 +321,21 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
       <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="주차 추가">
         <form onSubmit={handleCreate} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">미팅일</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">미팅일</label>
             <input
               type="date"
               value={weekDate}
               onChange={(e) => setWeekDate(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               autoFocus
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">주차 라벨</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">주차 라벨</label>
             <select
               value={weekLabel}
               onChange={(e) => setWeekLabel(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
             >
               {Array.from({ length: 20 }, (_, i) => `${i + 1}W`).map((w) => (
                 <option key={w} value={w}>{w}</option>
@@ -343,7 +343,7 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
             </select>
           </div>
           <div className="flex justify-end gap-2 pt-2">
-            <button type="button" onClick={() => setCreateOpen(false)} className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">취소</button>
+            <button type="button" onClick={() => setCreateOpen(false)} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">취소</button>
             <button type="submit" className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">추가</button>
           </div>
         </form>
@@ -351,11 +351,11 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
 
       {/* 삭제 확인 모달 */}
       <Modal open={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="주차 삭제">
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
           <strong>{deleteTarget?.weekDate} ({deleteTarget?.weekLabel})</strong> 주간 보고를 삭제하시겠습니까?
         </p>
         <div className="flex justify-end gap-2">
-          <button onClick={() => setDeleteTarget(null)} className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">취소</button>
+          <button onClick={() => setDeleteTarget(null)} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">취소</button>
           <button onClick={confirmDelete} className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700">삭제</button>
         </div>
       </Modal>

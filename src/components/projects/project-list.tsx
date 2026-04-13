@@ -39,7 +39,7 @@ export function ProjectList() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">프로젝트</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">프로젝트</h1>
         {canEdit && (
           <button
             onClick={() => setModalOpen(true)}
@@ -57,18 +57,18 @@ export function ProjectList() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((p) => (
-            <div key={p.id} className="border rounded-xl p-5 hover:shadow-md transition-shadow bg-white">
+            <div key={p.id} className="border dark:border-gray-700 rounded-xl p-5 hover:shadow-md transition-shadow bg-white dark:bg-gray-800">
               <div className="flex items-start justify-between">
                 <Link href={`/projects/${p.id}`} className="flex-1">
-                  <h3 className="font-semibold text-gray-900 hover:text-blue-600">{p.name}</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-white hover:text-blue-600">{p.name}</h3>
                   {p.description && (
-                    <p className="text-sm text-gray-500 mt-1 line-clamp-2">{p.description}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{p.description}</p>
                   )}
                 </Link>
                 {canEdit && (
                   <button
                     onClick={() => handleDelete(p.id)}
-                    className="text-gray-300 hover:text-red-500 ml-2"
+                    className="text-gray-300 dark:text-gray-600 hover:text-red-500 ml-2"
                   >
                     &times;
                   </button>

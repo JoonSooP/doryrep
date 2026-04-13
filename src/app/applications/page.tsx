@@ -89,7 +89,7 @@ export default function ApplicationsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">앱 관리</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">앱 관리</h1>
         <button
           onClick={openCreate}
           className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700"
@@ -104,10 +104,10 @@ export default function ApplicationsPage() {
           <p className="text-sm">새 앱을 추가하세요</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border dark:border-gray-700 overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b bg-gray-50 text-left text-gray-500">
+              <tr className="border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-left text-gray-500 dark:text-gray-400">
                 <th className="px-5 py-3 font-medium">앱 이름</th>
                 <th className="px-5 py-3 font-medium">실행 명령어</th>
                 <th className="px-5 py-3 font-medium text-center">사용 중</th>
@@ -116,10 +116,10 @@ export default function ApplicationsPage() {
             </thead>
             <tbody>
               {apps.map((app) => (
-                <tr key={app.id} className="border-b last:border-b-0 hover:bg-gray-50">
-                  <td className="px-5 py-3 font-medium text-gray-900">{app.name}</td>
-                  <td className="px-5 py-3 text-gray-500 font-mono text-xs">{app.command}</td>
-                  <td className="px-5 py-3 text-center text-gray-500">{app._count?.demos ?? 0}개</td>
+                <tr key={app.id} className="border-b dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                  <td className="px-5 py-3 font-medium text-gray-900 dark:text-white">{app.name}</td>
+                  <td className="px-5 py-3 text-gray-500 dark:text-gray-400 font-mono text-xs">{app.command}</td>
+                  <td className="px-5 py-3 text-center text-gray-500 dark:text-gray-400">{app._count?.demos ?? 0}개</td>
                   <td className="px-5 py-3 text-right">
                     <button onClick={() => openEdit(app)} className="text-blue-500 hover:text-blue-700 text-xs mr-3">
                       수정
@@ -137,29 +137,29 @@ export default function ApplicationsPage() {
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editing ? "앱 수정" : "새 앱"}>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {error && <p className="text-sm text-red-500 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
+          {error && <p className="text-sm text-red-500 bg-red-50 dark:bg-red-900/30 rounded-lg px-3 py-2">{error}</p>}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">앱 이름</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">앱 이름</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               placeholder="예: Telegram"
               autoFocus
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">실행 명령어</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">실행 명령어</label>
             <input
               value={command}
               onChange={(e) => setCommand(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm font-mono bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               placeholder="예: open -a Telegram"
             />
             <p className="text-xs text-gray-400 mt-1">macOS: open -a AppName / Windows: start AppName</p>
           </div>
           <div className="flex justify-end gap-2 pt-2">
-            <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">
+            <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
               취소
             </button>
             <button type="submit" className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">

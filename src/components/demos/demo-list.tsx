@@ -47,12 +47,12 @@ function ScenarioView({ text }: { text: string }) {
   if (!text) return null;
   const lines = text.split("\n");
   return (
-    <div className="space-y-0.5 text-sm text-gray-700">
+    <div className="space-y-0.5 text-sm text-gray-700 dark:text-gray-300">
       {lines.map((line, i) => {
         const trimmed = line.trim();
         if (!trimmed) return <div key={i} className="h-2" />;
         const sectionMatch = trimmed.match(/^[①②③④⑤⑥⑦⑧⑨⑩]\s+(.+)/);
-        if (sectionMatch) return <div key={i} className="flex items-center gap-2 mt-3 mb-1"><span className="text-base">{trimmed[0]}</span><h4 className="font-bold text-gray-900 text-base">{sectionMatch[1]}</h4></div>;
+        if (sectionMatch) return <div key={i} className="flex items-center gap-2 mt-3 mb-1"><span className="text-base">{trimmed[0]}</span><h4 className="font-bold text-gray-900 dark:text-white text-base">{sectionMatch[1]}</h4></div>;
         if (trimmed.startsWith("- 목적")) return <p key={i} className="text-gray-600 ml-4">{trimmed}</p>;
         if (trimmed.startsWith("- 주요")) return <p key={i} className="text-gray-800 font-semibold ml-4 mt-2">{trimmed.replace("- ", "")}</p>;
         if (/^\d+\)/.test(trimmed)) return <div key={i} className="ml-8">{renderScenarioLine(trimmed, i)}</div>;
@@ -349,7 +349,7 @@ export function DemoList({ projectId }: { projectId: string }) {
       </div>
 
       {demos.length === 0 ? (
-        <div className="text-center py-12 text-gray-400 bg-gray-50 rounded-xl">
+        <div className="text-center py-12 text-gray-400 bg-gray-50 dark:bg-gray-800 rounded-xl">
           <p className="mb-1">등록된 시연 주제가 없습니다</p>
           <p className="text-sm">주제를 추가해 보세요</p>
         </div>
@@ -376,13 +376,13 @@ export function DemoList({ projectId }: { projectId: string }) {
                   } else { handleDrop(idx); }
                 } : undefined}
                 onDragEnd={canEdit ? () => { draggingIdx.current = null; setDragOverIdx(null); } : undefined}
-                className={`bg-white border rounded-xl shadow-sm hover:shadow-md transition-all ${dragOverIdx === idx ? "ring-2 ring-blue-300 scale-[1.005]" : ""}`}
+                className={`bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-all ${dragOverIdx === idx ? "ring-2 ring-blue-300 dark:ring-blue-700 scale-[1.005]" : ""}`}
               >
                 {/* 카드 헤더 */}
                 <div className="flex items-center gap-3 p-4 cursor-pointer" onClick={() => setExpandedId((prev) => prev === demo.id ? null : demo.id)}>
                   {canEdit && <span className="text-gray-300 text-xs select-none cursor-grab">&#9776;</span>}
                   <span className="text-gray-400 text-xs">{isExpanded ? "▼" : "▶"}</span>
-                  <h4 className="font-semibold text-gray-900 flex-1">{demo.title}</h4>
+                  <h4 className="font-semibold text-gray-900 dark:text-white flex-1">{demo.title}</h4>
 
                   {demoImages.length > 0 && <span className="text-xs text-gray-400">🖼️ {demoImages.length}</span>}
 
@@ -420,12 +420,12 @@ export function DemoList({ projectId }: { projectId: string }) {
                     {demo.scenario ? (
                       <ScenarioView text={demo.scenario} />
                     ) : demoImages.length === 0 ? (
-                      <div className="text-sm text-gray-400 border-t border-gray-100 pt-3">
+                      <div className="text-sm text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-3">
                         시나리오가 없습니다. {canEdit && "수정 버튼을 눌러 시나리오를 작성해 보세요."}
                       </div>
                     ) : null}
                     {demoImages.length > 0 && (
-                      <div className={`space-y-3 ${demo.scenario ? "mt-3 pt-3 border-t border-gray-100" : ""}`}>
+                      <div className={`space-y-3 ${demo.scenario ? "mt-3 pt-3 border-t border-gray-100 dark:border-gray-700" : ""}`}>
                         {demoImages.map((img) => (
                           <div key={img.id}>
                             <img
@@ -451,14 +451,14 @@ export function DemoList({ projectId }: { projectId: string }) {
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editingDemo ? "주제 수정" : "새 주제"}>
         <form onSubmit={handleSubmit} className="space-y-4 max-h-[70vh] overflow-y-auto">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">제목</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">제목</label>
             <input value={title} onChange={(e) => setTitle(e.target.value)}
               className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               placeholder="시연 주제 제목" autoFocus />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">시연 시나리오</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">시연 시나리오</label>
             <textarea value={scenario} onChange={(e) => setScenario(e.target.value)} rows={6}
               className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none font-mono"
               placeholder={"① 진단 증빙 자료 제출 검증 및 평가\n- 목적 : ...\n1) [Web] 증빙 업로드 후 AI 유효성 검사"} />
@@ -466,17 +466,17 @@ export function DemoList({ projectId }: { projectId: string }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">시연 이미지</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">시연 이미지</label>
             <ImageEditor images={formImages} onChange={setFormImages} />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">실행 방식</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">실행 방식</label>
             <ActionEditor actions={formActions} onChange={setFormActions} apps={apps} />
           </div>
 
-          <div className="flex justify-end gap-2 pt-2 sticky bottom-0 bg-white pb-1">
-            <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">취소</button>
+          <div className="flex justify-end gap-2 pt-2 sticky bottom-0 bg-white dark:bg-gray-800 pb-1">
+            <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">취소</button>
             <button type="submit" className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">{editingDemo ? "수정" : "추가"}</button>
           </div>
         </form>

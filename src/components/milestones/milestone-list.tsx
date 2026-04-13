@@ -376,20 +376,20 @@ export function MilestoneList({ projectId }: { projectId: string }) {
       </div>
 
       {milestones.length === 0 ? (
-        <div className="text-center py-12 text-gray-400 bg-gray-50 rounded-xl">
+        <div className="text-center py-12 text-gray-400 bg-gray-50 dark:bg-gray-800 rounded-xl">
           <p className="mb-1">등록된 일정이 없습니다</p>
           <p className="text-sm">WBS 항목을 추가해 보세요</p>
         </div>
       ) : (
-        <div className="bg-white border rounded-xl overflow-hidden flex select-none">
+        <div className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl overflow-hidden flex select-none">
           {/* 왼쪽 고정 */}
           <div
             ref={leftRef}
-            className="shrink-0 border-r overflow-y-auto"
+            className="shrink-0 border-r dark:border-gray-700 overflow-y-auto"
             style={{ width: LEFT_WIDTH }}
             onScroll={() => handleScroll("left")}
           >
-            <div className="border-b bg-gray-50 flex items-center px-3 text-xs font-medium text-gray-500" style={{ height: HEADER_HEIGHT }}>
+            <div className="border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex items-center px-3 text-xs font-medium text-gray-500 dark:text-gray-400" style={{ height: HEADER_HEIGHT }}>
               WBS 항목
             </div>
             {categoryData.map(({ parent: p, laneCount }) => {
@@ -416,16 +416,16 @@ export function MilestoneList({ projectId }: { projectId: string }) {
           {/* 오른쪽 간트 */}
           <div ref={scrollRef} className="flex-1 overflow-hidden" onScroll={() => handleScroll("right")}>
             <div style={{ width: "100%" }}>
-              <div className="flex border-b bg-gray-50" style={{ height: 24 }}>
+              <div className="flex border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900" style={{ height: 24 }}>
                 {months.map((m, i) => (
-                  <div key={i} className="text-center text-sm font-bold text-gray-700 border-r border-gray-200 flex items-center justify-center" style={{ width: `${(m.weeks / weeks.length) * 100}%` }}>
+                  <div key={i} className="text-center text-sm font-bold text-gray-700 dark:text-gray-300 border-r border-gray-200 dark:border-gray-700 flex items-center justify-center" style={{ width: `${(m.weeks / weeks.length) * 100}%` }}>
                     {m.label}
                   </div>
                 ))}
               </div>
-              <div className="flex border-b bg-gray-50" style={{ height: 32 }}>
+              <div className="flex border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900" style={{ height: 32 }}>
                 {weeks.map((w, i) => (
-                  <div key={i} className="text-center text-xs font-medium text-gray-600 border-r border-gray-100 flex items-center justify-center" style={{ width: `${100 / weeks.length}%` }}>
+                  <div key={i} className="text-center text-xs font-medium text-gray-600 dark:text-gray-400 border-r border-gray-100 dark:border-gray-700 flex items-center justify-center" style={{ width: `${100 / weeks.length}%` }}>
                     {w.label}
                   </div>
                 ))}
@@ -545,24 +545,24 @@ export function MilestoneList({ projectId }: { projectId: string }) {
         <form onSubmit={handleSubmit} className="space-y-4">
           {!editing && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">분류</label>
-              <select value={parentId} onChange={(e) => setParentId(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">분류</label>
+              <select value={parentId} onChange={(e) => setParentId(e.target.value)} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
                 <option value="">대분류 (최상위)</option>
                 {roots.map((r) => (<option key={r.id} value={r.id}>{r.title}의 하위</option>))}
               </select>
             </div>
           )}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">항목명</label>
-            <input value={title} onChange={(e) => setTitle(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="항목 이름" autoFocus />
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">항목명</label>
+            <input value={title} onChange={(e) => setTitle(e.target.value)} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="항목 이름" autoFocus />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">담당자</label>
-            <input value={assignee} onChange={(e) => setAssignee(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="담당자명" />
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">담당자</label>
+            <input value={assignee} onChange={(e) => setAssignee(e.target.value)} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="담당자명" />
           </div>
           {!parentId && !editing?.parentId && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">색상</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">색상</label>
               <div className="flex gap-2">
                 {COLORS.map((c) => (
                   <button key={c.value} type="button" onClick={() => setColor(c.value)}
@@ -574,16 +574,16 @@ export function MilestoneList({ projectId }: { projectId: string }) {
           )}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">시작일</label>
-              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" />
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">시작일</label>
+              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">종료일</label>
-              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" />
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">종료일</label>
+              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">중요도</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">중요도</label>
             <div className="flex gap-2">
               {(["상", "중", "하"] as const).map((p) => (
                 <button
@@ -595,7 +595,7 @@ export function MilestoneList({ projectId }: { projectId: string }) {
                       ? p === "상" ? "bg-red-50 border-red-300 text-red-700 font-medium"
                         : p === "중" ? "bg-amber-50 border-amber-300 text-amber-700 font-medium"
                         : "bg-gray-50 border-gray-300 text-gray-700 font-medium"
-                      : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
+                      : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
                   }`}
                 >
                   {p}
@@ -604,11 +604,11 @@ export function MilestoneList({ projectId }: { projectId: string }) {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">진행률: {progress}%</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">진행률: {progress}%</label>
             <input type="range" min={0} max={100} step={5} value={progress} onChange={(e) => setProgress(Number(e.target.value))} className="w-full accent-blue-600" />
           </div>
           <div className="flex justify-end gap-2 pt-2">
-            <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">취소</button>
+            <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">취소</button>
             <button type="submit" className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">{editing ? "수정" : "추가"}</button>
           </div>
         </form>
@@ -616,12 +616,12 @@ export function MilestoneList({ projectId }: { projectId: string }) {
 
       {/* 삭제 확인 모달 */}
       <Modal open={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="항목 삭제">
-        <p className="text-sm text-gray-600 mb-1"><strong>{deleteTarget?.title}</strong> 항목을 삭제하시겠습니까?</p>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mb-1"><strong>{deleteTarget?.title}</strong> 항목을 삭제하시겠습니까?</p>
         {!deleteTarget?.parentId && (
-          <p className="text-sm text-amber-600 bg-amber-50 rounded-lg px-3 py-2 mb-4">하위 항목도 함께 삭제됩니다.</p>
+          <p className="text-sm text-amber-600 bg-amber-50 dark:bg-amber-900/30 rounded-lg px-3 py-2 mb-4">하위 항목도 함께 삭제됩니다.</p>
         )}
         <div className="flex justify-end gap-2 pt-2">
-          <button onClick={() => setDeleteTarget(null)} className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">취소</button>
+          <button onClick={() => setDeleteTarget(null)} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">취소</button>
           <button onClick={confirmDelete} className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700">삭제</button>
         </div>
       </Modal>
