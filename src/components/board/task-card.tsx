@@ -22,7 +22,7 @@ export function TaskCard({
       className={`bg-white dark:bg-gray-700 rounded-lg border dark:border-gray-600 p-3 mb-2 shadow-sm hover:shadow-md transition-shadow ${canEdit ? "cursor-grab active:cursor-grabbing" : ""}`}
     >
       <div className="flex items-start justify-between gap-2">
-        <h4 className="font-medium text-sm text-gray-900 dark:text-white flex-1">{task.title}</h4>
+        <h4 className="font-medium text-base text-gray-900 dark:text-white flex-1">{task.title}</h4>
         {canEdit && (
           <div className="flex gap-1 shrink-0">
             <button
@@ -41,7 +41,7 @@ export function TaskCard({
         )}
       </div>
       {task.description && (
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{task.description}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{task.description}</p>
       )}
       {task.assignee && (
         <div className="mt-2 flex items-center gap-1">

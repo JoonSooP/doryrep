@@ -71,8 +71,8 @@ export default function SettingsPage() {
   if (!user) return null;
 
   return (
-    <div className="max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">설정</h1>
+    <div className="max-w-xl mx-auto">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">설정</h1>
 
       {/* 내 정보 */}
       <div className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-6 mb-6">

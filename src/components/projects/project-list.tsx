@@ -39,7 +39,7 @@ export function ProjectList() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">프로젝트</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">프로젝트</h1>
         {canEdit && (
           <button
             onClick={() => setModalOpen(true)}
@@ -62,7 +62,7 @@ export function ProjectList() {
                 <Link href={`/projects/${p.id}`} className="flex-1">
                   <h3 className="font-semibold text-gray-900 dark:text-white hover:text-blue-600">{p.name}</h3>
                   {p.description && (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{p.description}</p>
+                    <p className="text-base text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{p.description}</p>
                   )}
                 </Link>
                 {canEdit && (
@@ -74,7 +74,7 @@ export function ProjectList() {
                   </button>
                 )}
               </div>
-              <div className="mt-3 flex items-center gap-2 text-xs text-gray-400">
+              <div className="mt-3 flex items-center gap-2 text-sm text-gray-400">
                 <span>{p._count?.tasks ?? 0}개 태스크</span>
               </div>
             </div>

@@ -229,7 +229,7 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
                       <thead>
                         <tr className="bg-gray-50 dark:bg-gray-900 border-b dark:border-gray-700 text-gray-600 dark:text-gray-400">
                           <th
-                            className="px-3 py-2 font-semibold text-left w-28 border-r cursor-pointer hover:bg-gray-100 select-none"
+                            className="px-3 py-2 font-semibold text-left w-32 border-r cursor-pointer hover:bg-gray-100 select-none whitespace-nowrap"
                             onClick={() => setSortOrder((o) => o === "desc" ? "asc" : "desc")}
                           >
                             미팅일 {sortOrder === "desc" ? "▼" : "▲"}
@@ -241,13 +241,13 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
                             주차{sortOrder === "desc" ? "▼" : "▲"}
                           </th>
                           <th className="px-3 py-2 font-semibold text-left border-r">
-                            <span className="text-yellow-600 bg-yellow-100 px-1.5 py-0.5 rounded text-xs font-bold">지난주 실적</span>
+                            <span className="text-yellow-600 bg-yellow-100 px-1.5 py-0.5 rounded text-sm font-bold">지난주 실적</span>
                           </th>
                           <th className="px-3 py-2 font-semibold text-left border-r">
-                            <span className="text-green-600 bg-green-100 px-1.5 py-0.5 rounded text-xs font-bold">이번주 계획</span>
+                            <span className="text-green-600 bg-green-100 px-1.5 py-0.5 rounded text-sm font-bold">이번주 계획</span>
                           </th>
                           <th className="px-3 py-2 font-semibold text-left border-r w-36">이슈/협의필요</th>
-                          <th className="px-3 py-2 font-semibold text-left w-28">이슈관리 ID</th>
+                          <th className="px-3 py-2 font-semibold text-left w-40 whitespace-nowrap">이슈관리 ID</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -255,7 +255,7 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
                           <tr key={entry.id} className="border-b dark:border-gray-700 last:border-b-0 hover:bg-gray-50/50 dark:hover:bg-gray-700/30">
                             <td className="px-3 py-2 border-r dark:border-gray-700 align-top text-gray-700 dark:text-gray-300">
                               <div className="flex items-center justify-between">
-                                <span className="text-xs font-medium">{report.weekDate}</span>
+                                <span className="text-sm font-medium whitespace-nowrap">{report.weekDate}</span>
                                 {canEdit && (
                                   <button
                                     onClick={() => setDeleteTarget(report)}
@@ -266,7 +266,7 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
                                 )}
                               </div>
                             </td>
-                            <td className="px-3 py-2 border-r dark:border-gray-700 align-top font-semibold text-gray-700 dark:text-gray-300 text-xs">
+                            <td className="px-3 py-2 border-r dark:border-gray-700 align-top font-semibold text-gray-700 dark:text-gray-300 text-sm">
                               {report.weekLabel}
                             </td>
                             <td className="px-1 py-1 border-r dark:border-gray-700 align-top">
@@ -274,7 +274,7 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
                                 value={entry.lastWeek}
                                 onChange={(e) => handleEntryChange(entry.id, "lastWeek", e.target.value)}
                                 readOnly={!canEdit}
-                                className={`w-full text-xs text-gray-700 dark:text-gray-300 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[140px] ${canEdit ? "focus:bg-yellow-50" : "cursor-default"}`}
+                                className={`w-full text-sm text-gray-700 dark:text-gray-300 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[220px] ${canEdit ? "focus:bg-yellow-50" : "cursor-default"}`}
                                 placeholder="· 실적 내용"
                               />
                             </td>
@@ -283,7 +283,7 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
                                 value={entry.thisWeek}
                                 onChange={(e) => handleEntryChange(entry.id, "thisWeek", e.target.value)}
                                 readOnly={!canEdit}
-                                className={`w-full text-xs text-gray-700 dark:text-gray-300 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[140px] ${canEdit ? "focus:bg-green-50" : "cursor-default"}`}
+                                className={`w-full text-sm text-gray-700 dark:text-gray-300 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[220px] ${canEdit ? "focus:bg-green-50" : "cursor-default"}`}
                                 placeholder="· 계획 내용"
                               />
                             </td>
@@ -292,7 +292,7 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
                                 value={entry.issues}
                                 onChange={(e) => handleEntryChange(entry.id, "issues", e.target.value)}
                                 readOnly={!canEdit}
-                                className={`w-full text-xs text-gray-700 dark:text-gray-300 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[140px] ${canEdit ? "focus:bg-red-50" : "cursor-default"}`}
+                                className={`w-full text-sm text-gray-700 dark:text-gray-300 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[220px] ${canEdit ? "focus:bg-red-50" : "cursor-default"}`}
                                 placeholder="· 이슈 내용"
                               />
                             </td>
@@ -301,7 +301,7 @@ export function WeeklyReport({ projectId }: { projectId: string }) {
                                 value={entry.issueIds}
                                 onChange={(e) => handleEntryChange(entry.id, "issueIds", e.target.value)}
                                 readOnly={!canEdit}
-                                className={`w-full text-xs text-gray-700 dark:text-gray-300 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[140px] ${canEdit ? "focus:bg-blue-50" : "cursor-default"}`}
+                                className={`w-full text-sm text-gray-700 dark:text-gray-300 border-0 bg-transparent resize-none focus:outline-none rounded p-1.5 min-h-[220px] ${canEdit ? "focus:bg-blue-50" : "cursor-default"}`}
                                 placeholder="PMO-0000-000"
                               />
                             </td>

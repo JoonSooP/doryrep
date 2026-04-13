@@ -33,7 +33,7 @@ export function Column({
   const [dragOver, setDragOver] = useState(false);
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 min-w-[280px] w-[280px] flex flex-col max-h-[calc(100vh-200px)]">
+    <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 min-w-[320px] w-[320px] flex flex-col max-h-[calc(100vh-200px)]">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_COLORS[status]}`}>

@@ -26,7 +26,7 @@ export default function RootLayout({
         <AuthProvider>
           <ThemeProvider>
             <AppHeader />
-            <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">{children}</main>
+            <main className="flex-1 w-full px-8 py-6">{children}</main>
           </ThemeProvider>
         </AuthProvider>
       </body>

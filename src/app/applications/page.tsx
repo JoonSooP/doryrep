@@ -89,7 +89,7 @@ export default function ApplicationsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">앱 관리</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">앱 관리</h1>
         <button
           onClick={openCreate}
           className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700"
@@ -105,7 +105,7 @@ export default function ApplicationsPage() {
         </div>
       ) : (
         <div className="bg-white dark:bg-gray-800 rounded-xl border dark:border-gray-700 overflow-hidden">
-          <table className="w-full text-sm">
+          <table className="w-full text-base">
             <thead>
               <tr className="border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-left text-gray-500 dark:text-gray-400">
                 <th className="px-5 py-3 font-medium">앱 이름</th>

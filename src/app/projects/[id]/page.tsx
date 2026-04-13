@@ -37,7 +37,7 @@ export default function ProjectPage() {
           프로젝트
         </Link>
         <span className="text-gray-300 dark:text-gray-600">/</span>
-        <h1 className="text-xl font-bold text-gray-900 dark:text-white">{projectName}</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{projectName}</h1>
       </div>
 
       <div className="flex gap-1 border-b dark:border-gray-700 mb-6">
@@ -45,7 +45,7 @@ export default function ProjectPage() {
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+            className={`px-5 py-3 text-base font-medium border-b-2 transition-colors ${
               tab === t.key
                 ? "border-blue-600 text-blue-600"
                 : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"

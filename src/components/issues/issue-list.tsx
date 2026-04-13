@@ -153,7 +153,7 @@ export function IssueList({ projectId }: { projectId: string }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-800 dark:text-white">이슈_Action Item 관리대장</h2>
+        <h2 className="text-xl font-bold text-gray-800 dark:text-white">이슈_Action Item 관리대장</h2>
         {canEdit && (
           <button onClick={openCreate} className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
             + 이슈 등록
@@ -162,7 +162,7 @@ export function IssueList({ projectId }: { projectId: string }) {
       </div>
 
       <div className="overflow-x-auto border dark:border-gray-700 rounded-lg">
-        <table className="w-full text-sm border-collapse min-w-[1400px] dark:text-gray-300">
+        <table className="w-full text-base border-collapse min-w-[1400px] dark:text-gray-300">
           <thead>
             <tr className="bg-amber-100 dark:bg-amber-900/40 text-gray-700 dark:text-gray-200">
               <th className="border px-2 py-2 text-center" rowSpan={2}>대분류</th>
@@ -179,10 +179,10 @@ export function IssueList({ projectId }: { projectId: string }) {
               {canEdit && <th className="border px-2 py-2 text-center" rowSpan={2}>관리</th>}
             </tr>
             <tr className="bg-amber-50 dark:bg-amber-900/20 text-gray-600 dark:text-gray-400">
-              <th className="border px-2 py-1 text-center text-xs">시작일</th>
-              <th className="border px-2 py-1 text-center text-xs">종료일</th>
-              <th className="border px-2 py-1 text-center text-xs">시작일</th>
-              <th className="border px-2 py-1 text-center text-xs">종료일</th>
+              <th className="border px-2 py-1 text-center text-sm">시작일</th>
+              <th className="border px-2 py-1 text-center text-sm">종료일</th>
+              <th className="border px-2 py-1 text-center text-sm">시작일</th>
+              <th className="border px-2 py-1 text-center text-sm">종료일</th>
             </tr>
           </thead>
           <tbody>
@@ -190,35 +190,35 @@ export function IssueList({ projectId }: { projectId: string }) {
               catIssues.map((issue, idx) => (
                 <tr key={issue.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                   {idx === 0 && (
-                    <td className="border dark:border-gray-700 px-2 py-2 text-center text-xs font-medium bg-gray-50 dark:bg-gray-800 align-middle" rowSpan={catIssues.length}>
+                    <td className="border dark:border-gray-700 px-2 py-2 text-center text-sm font-medium bg-gray-50 dark:bg-gray-800 align-middle" rowSpan={catIssues.length}>
                       {category}
                     </td>
                   )}
-                  <td className="border px-2 py-2 text-center text-xs whitespace-nowrap">{formatDate(issue.registeredAt)}</td>
-                  <td className="border px-2 py-2 text-center text-xs text-gray-600">{issue.issueCode}</td>
-                  <td className="border px-2 py-2 text-xs whitespace-pre-wrap max-w-[300px]">{issue.description}</td>
+                  <td className="border px-2 py-2 text-center text-sm whitespace-nowrap">{formatDate(issue.registeredAt)}</td>
+                  <td className="border px-2 py-2 text-center text-sm text-gray-600">{issue.issueCode}</td>
+                  <td className="border px-2 py-2 text-sm whitespace-pre-wrap max-w-[300px]">{issue.description}</td>
                   <td className="border px-2 py-2 text-center">
-                    <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${typeBadge(issue.issueType)}`}>
+                    <span className={`inline-block px-2 py-0.5 rounded text-sm font-medium ${typeBadge(issue.issueType)}`}>
                       {issue.issueType}
                     </span>
                   </td>
-                  <td className="border px-2 py-2 text-center text-xs">{issue.assignee}</td>
-                  <td className="border px-2 py-2 text-center text-xs">{issue.responsible}</td>
-                  <td className="border px-2 py-2 text-xs whitespace-pre-wrap max-w-[200px]">{issue.result}</td>
-                  <td className="border px-2 py-2 text-center text-xs whitespace-nowrap">{formatDate(issue.planStartDate)}</td>
-                  <td className="border px-2 py-2 text-center text-xs whitespace-nowrap">{formatDate(issue.planEndDate)}</td>
-                  <td className="border px-2 py-2 text-center text-xs whitespace-nowrap">{formatDate(issue.actualStartDate)}</td>
-                  <td className="border px-2 py-2 text-center text-xs whitespace-nowrap">{formatDate(issue.actualEndDate)}</td>
+                  <td className="border px-2 py-2 text-center text-sm">{issue.assignee}</td>
+                  <td className="border px-2 py-2 text-center text-sm">{issue.responsible}</td>
+                  <td className="border px-2 py-2 text-sm whitespace-pre-wrap max-w-[200px]">{issue.result}</td>
+                  <td className="border px-2 py-2 text-center text-sm whitespace-nowrap">{formatDate(issue.planStartDate)}</td>
+                  <td className="border px-2 py-2 text-center text-sm whitespace-nowrap">{formatDate(issue.planEndDate)}</td>
+                  <td className="border px-2 py-2 text-center text-sm whitespace-nowrap">{formatDate(issue.actualStartDate)}</td>
+                  <td className="border px-2 py-2 text-center text-sm whitespace-nowrap">{formatDate(issue.actualEndDate)}</td>
                   <td className="border px-2 py-2 text-center">
-                    <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${statusBadge(issue.status)}`}>
+                    <span className={`inline-block px-2 py-0.5 rounded text-sm font-medium ${statusBadge(issue.status)}`}>
                       {issue.status}
                     </span>
                   </td>
                   {canEdit && (
                     <td className="border px-2 py-2 text-center">
                       <div className="flex gap-1 justify-center">
-                        <button onClick={() => openEdit(issue)} className="text-blue-500 hover:text-blue-700 text-xs">수정</button>
-                        <button onClick={() => handleDelete(issue.id)} className="text-red-400 hover:text-red-600 text-xs">삭제</button>
+                        <button onClick={() => openEdit(issue)} className="text-blue-500 hover:text-blue-700 text-sm">수정</button>
+                        <button onClick={() => handleDelete(issue.id)} className="text-red-400 hover:text-red-600 text-sm">삭제</button>
                       </div>
                     </td>
                   )}
