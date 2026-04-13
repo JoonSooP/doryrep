@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const { projectId, weekDate, weekLabel } = await req.json();
 
-  // 대분류 마일스톤 가져오기
+  // 과제 마일스톤 가져오기
   const parents = await prisma.milestone.findMany({
     where: { projectId, parentId: null },
     orderBy: { order: "asc" },

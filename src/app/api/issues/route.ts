@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   try {
     const issues = await prisma.issue.findMany({
       where: { projectId },
-      orderBy: [{ category: "asc" }, { number: "asc" }],
+      orderBy: [{ registeredAt: "asc" }, { number: "asc" }],
     });
     return NextResponse.json(issues);
   } catch (e) {

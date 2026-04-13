@@ -370,7 +370,7 @@ export function MilestoneList({ projectId }: { projectId: string }) {
         <span className="text-sm text-gray-400">{milestones.length}개 항목</span>
         {canEdit && (
           <button onClick={() => openCreate()} className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
-            + 대분류 추가
+            + 과제 추가
           </button>
         )}
       </div>
@@ -541,13 +541,13 @@ export function MilestoneList({ projectId }: { projectId: string }) {
       )}
 
       {/* 추가/수정 모달 */}
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editing ? "항목 수정" : parentId ? "하위 항목 추가" : "대분류 추가"}>
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editing ? "항목 수정" : parentId ? "하위 항목 추가" : "과제 추가"}>
         <form onSubmit={handleSubmit} className="space-y-4">
           {!editing && (
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">분류</label>
               <select value={parentId} onChange={(e) => setParentId(e.target.value)} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                <option value="">대분류 (최상위)</option>
+                <option value="">과제 (최상위)</option>
                 {roots.map((r) => (<option key={r.id} value={r.id}>{r.title}의 하위</option>))}
               </select>
             </div>

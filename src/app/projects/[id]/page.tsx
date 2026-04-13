@@ -57,7 +57,7 @@ export default function ProjectPage() {
       </div>
 
       {tab === "milestone" && <MilestoneList projectId={id} />}
-      {tab === "weekly" && <WeeklyReport projectId={id} />}
+      {tab === "weekly" && <WeeklyReport projectId={id} onNavigateToIssue={() => setTab("issue")} />}
       {tab === "issue" && <IssueList projectId={id} />}
       {tab === "kanban" && <KanbanBoard projectId={id} />}
       {tab === "demo" && <DemoList projectId={id} />}
