@@ -7,6 +7,8 @@ type User = {
   loginId: string;
   name: string;
   role: string;
+  userType?: string;
+  categories?: string;
   mustChangePassword: boolean;
 };
 

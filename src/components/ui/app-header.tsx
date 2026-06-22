@@ -59,9 +59,11 @@ export function AppHeader() {
           <Link href="/users" className="text-base text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
             사용자
           </Link>
-          <Link href="/applications" className="text-base text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
-            앱
-          </Link>
+          {user.role === "Admin" && (
+            <Link href="/applications" className="text-base text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+              앱
+            </Link>
+          )}
           <div className="flex items-center gap-2 ml-2 pl-4 border-l dark:border-gray-600">
             <span className="text-sm text-gray-500 dark:text-gray-400">
               {user.name}

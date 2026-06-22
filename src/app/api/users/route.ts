@@ -7,6 +7,7 @@ export async function GET() {
     orderBy: { name: "asc" },
     select: {
       id: true, loginId: true, name: true, email: true, role: true,
+      userType: true, categories: true,
       mustChangePassword: true, _count: { select: { tasks: true } },
     },
   });
@@ -14,7 +15,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const { loginId, name, email, role } = await req.json();
+  const { loginId, name, email, role, userType, categories } = await req.json();
   const existing = await prisma.user.findUnique({ where: { loginId } });
   if (existing) {
     return NextResponse.json({ error: "이미 등록된 ID입니다" }, { status: 409 });
@@ -22,7 +23,13 @@ export async function POST(req: NextRequest) {
   // 초기 비밀번호 = loginId
   const hash = await bcrypt.hash(loginId, 10);
   const user = await prisma.user.create({
-    data: { loginId, name, email: email || loginId, password: hash, role: role || "Viewer", mustChangePassword: true },
+    data: {
+      loginId, name, email: email || loginId, password: hash,
+      role: role || "Viewer",
+      userType: userType || "프로젝트팀",
+      categories: categories || "",
+      mustChangePassword: true,
+    },
   });
   return NextResponse.json(user, { status: 201 });
 }

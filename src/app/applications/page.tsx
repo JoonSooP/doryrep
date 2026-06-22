@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Modal } from "@/components/ui/modal";
+import { useAuth } from "@/contexts/auth-context";
 
 type Application = {
   id: string;
@@ -12,6 +13,7 @@ type Application = {
 };
 
 export default function ApplicationsPage() {
+  const { user, loading } = useAuth();
   const [apps, setApps] = useState<Application[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Application | null>(null);
@@ -24,7 +26,17 @@ export default function ApplicationsPage() {
     fetch("/api/applications").then((r) => r.json()).then(setApps);
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { if (user?.role === "Admin") load(); }, [user]);
+
+  if (loading) return <div className="text-gray-400 text-sm py-12 text-center">로딩 중...</div>;
+  if (user?.role !== "Admin") {
+    return (
+      <div className="py-16 text-center">
+        <p className="text-lg text-gray-500 dark:text-gray-400 mb-1">접근 권한이 없습니다</p>
+        <p className="text-sm text-gray-400">앱 관리는 Admin 권한이 필요합니다.</p>
+      </div>
+    );
+  }
 
   const openCreate = () => {
     setEditing(null);

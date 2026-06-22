@@ -14,6 +14,8 @@ model User {
   email              String   @unique
   password           String
   role               String   @default("Viewer")
+  userType           String   @default("프로젝트팀")
+  categories         String   @default("")
   mustChangePassword Boolean  @default(true)
   avatar             String?
   tasks              Task[]
@@ -30,6 +32,7 @@ model Project {
   milestones     Milestone[]
   weeklyReports  WeeklyReport[]
   issues         Issue[]
+  actionItems    ActionItem[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 }
@@ -123,6 +126,27 @@ model Issue {
   planEndDate     String?
   actualStartDate String?
   actualEndDate   String?
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ActionItem {
+  id              String   @id @default(cuid())
+  number          Int      @default(0)
+  category        String   @default("")
+  actionCategory  String   @default("")
+  description     String   @default("")
+  priority        String   @default("중")
+  requester       String   @default("")
+  assignee        String   @default("")
+  requestDate     String?
+  startDate       String?
+  endDate         String?
+  progress        Int      @default(0)
+  workContent     String   @default("")
+  status          String   @default("Open")
   project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId       String
   createdAt       DateTime @default(now())
