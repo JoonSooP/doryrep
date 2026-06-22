@@ -48,6 +48,8 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
   const [aiPriority, setAiPriority] = useState<string>("중");
   const [aiRequester, setAiRequester] = useState("");
   const [aiAssignee, setAiAssignee] = useState("");
+  const [filterCategory, setFilterCategory] = useState<string>("");
+  const filterInit = useRef(false);
   const draggingId = useRef<string | null>(null);
   const draggingKind = useRef<"task" | "action">("task");
 
@@ -69,8 +71,19 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
       .catch(() => {});
   }, [projectId, setTasks]);
 
+  const allCategories = Array.from(new Set([...categories, ...actionItems.map((i) => i.category)].filter(Boolean)));
+  const visibleActionItems = filterCategory ? actionItems.filter((i) => i.category === filterCategory) : actionItems;
   const actionItemsByStatus = (s: TaskStatus) =>
-    actionItems.filter((i) => (AI_STATUS_TO_KANBAN[i.status] ?? "TODO") === s);
+    visibleActionItems.filter((i) => (AI_STATUS_TO_KANBAN[i.status] ?? "TODO") === s);
+
+  useEffect(() => {
+    if (filterInit.current) return;
+    const my = (user?.categories ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+    if (my.length === 1) {
+      setFilterCategory(my[0]);
+      filterInit.current = true;
+    }
+  }, [user]);
 
   const handleDragStart = (_e: React.DragEvent, taskId: string) => {
     draggingId.current = taskId;
@@ -188,6 +201,20 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
 
   return (
     <>
+      <div className="flex items-center gap-2 mb-4">
+        <label className="text-sm font-medium text-gray-600 dark:text-gray-300">과제:</label>
+        <select
+          value={filterCategory}
+          onChange={(e) => setFilterCategory(e.target.value)}
+          className="border dark:border-gray-600 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-700 dark:text-gray-100"
+        >
+          <option value="">전체</option>
+          {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
+        </select>
+        {filterCategory && (
+          <span className="text-xs text-gray-400 ml-2">선택한 과제의 Action Item만 표시 (Task는 항상 표시)</span>
+        )}
+      </div>
       <div className="flex gap-4 overflow-x-auto pb-4">
         {TASK_STATUSES.map((status) => (
           <Column
