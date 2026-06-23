@@ -10,6 +10,9 @@ import { TASK_STATUSES, TaskStatus, TaskWithAssignee, ActionItem } from "@/types
 
 const ACTION_CATEGORIES = ["기능개선", "버그수정", "문서화", "협의/검토", "기타"] as const;
 const PRIORITIES = ["상", "중", "하"] as const;
+const AI_STATUSES = ["Open", "In-Progress", "Review", "Pending", "Closed"] as const;
+const todayStr = () => new Date().toISOString().slice(0, 10);
+const weekLaterStr = () => new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
 
 const AI_STATUS_TO_KANBAN: Record<string, TaskStatus> = {
   "Open": "TODO",
@@ -48,6 +51,13 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
   const [aiPriority, setAiPriority] = useState<string>("중");
   const [aiRequester, setAiRequester] = useState("");
   const [aiAssignee, setAiAssignee] = useState("");
+  const [aiRequestDate, setAiRequestDate] = useState(todayStr());
+  const [aiStartDate, setAiStartDate] = useState(todayStr());
+  const [aiEndDate, setAiEndDate] = useState(weekLaterStr());
+  const [aiProgress, setAiProgress] = useState(0);
+  const [aiWorkContent, setAiWorkContent] = useState("");
+  const [aiAiStatus, setAiAiStatus] = useState<string>("Open");
+  const [aiEditingId, setAiEditingId] = useState<string | null>(null);
   const [filterCategory, setFilterCategory] = useState<string>("");
   const filterInit = useRef(false);
   const draggingId = useRef<string | null>(null);
@@ -123,6 +133,7 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
   };
 
   const handleAddTask = (status: TaskStatus) => {
+    setAiEditingId(null);
     setAiStatus(status);
     setAiCategory("");
     setAiActionCategory(ACTION_CATEGORIES[0]);
@@ -130,31 +141,66 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
     setAiPriority("중");
     setAiRequester(user?.name ?? "");
     setAiAssignee("");
+    setAiRequestDate(todayStr());
+    setAiStartDate(todayStr());
+    setAiEndDate(weekLaterStr());
+    setAiProgress(0);
+    setAiWorkContent("");
+    setAiAiStatus(KANBAN_TO_AI_STATUS[status] ?? "Open");
+    setAiModalOpen(true);
+  };
+
+  const handleEditActionItem = (item: ActionItem) => {
+    setAiEditingId(item.id);
+    setAiStatus(AI_STATUS_TO_KANBAN[item.status] ?? "TODO");
+    setAiCategory(item.category);
+    setAiActionCategory(item.actionCategory || ACTION_CATEGORIES[0]);
+    setAiDescription(item.description);
+    setAiPriority(item.priority || "중");
+    setAiRequester(item.requester);
+    setAiAssignee(item.assignee);
+    setAiRequestDate(item.requestDate?.slice(0, 10) ?? todayStr());
+    setAiStartDate(item.startDate?.slice(0, 10) ?? todayStr());
+    setAiEndDate(item.endDate?.slice(0, 10) ?? weekLaterStr());
+    setAiProgress(item.progress ?? 0);
+    setAiWorkContent(item.workContent ?? "");
+    setAiAiStatus(item.status || "Open");
     setAiModalOpen(true);
   };
 
   async function handleCreateActionItem() {
     if (!aiDescription.trim()) return;
-    const today = new Date().toISOString().slice(0, 10);
-    const weekLater = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+    const payload = {
+      category: aiCategory,
+      actionCategory: aiActionCategory,
+      description: aiDescription.trim(),
+      priority: aiPriority,
+      requester: aiRequester.trim(),
+      assignee: aiAssignee.trim(),
+      requestDate: aiRequestDate || null,
+      startDate: aiStartDate || null,
+      endDate: aiEndDate || null,
+      progress: Math.max(0, Math.min(100, Number(aiProgress) || 0)),
+      workContent: aiWorkContent,
+      status: aiEditingId ? aiAiStatus : (KANBAN_TO_AI_STATUS[aiStatus] ?? "Open"),
+    };
+    if (aiEditingId) {
+      const res = await fetch(`/api/action-items/${aiEditingId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setActionItems((prev) => prev.map((i) => (i.id === aiEditingId ? updated : i)));
+        setAiModalOpen(false);
+      }
+      return;
+    }
     const res = await fetch("/api/action-items", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        projectId,
-        category: aiCategory,
-        actionCategory: aiActionCategory,
-        description: aiDescription.trim(),
-        priority: aiPriority,
-        requester: aiRequester.trim(),
-        assignee: aiAssignee.trim(),
-        requestDate: today,
-        startDate: today,
-        endDate: weekLater,
-        progress: 0,
-        workContent: "",
-        status: KANBAN_TO_AI_STATUS[aiStatus] ?? "Open",
-      }),
+      body: JSON.stringify({ projectId, ...payload }),
     });
     if (res.ok) {
       const created = await res.json();
@@ -223,6 +269,7 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
             tasks={getTasksByStatus(status)}
             actionItems={actionItemsByStatus(status)}
             onActionDragStart={handleActionDragStart}
+            onEditActionItem={handleEditActionItem}
             onAddTask={handleAddTask}
             onEditTask={handleEditTask}
             onDeleteTask={handleDeleteTask}
@@ -242,7 +289,7 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
         defaultStatus={defaultStatus}
       />
 
-      <Modal open={aiModalOpen} onClose={() => setAiModalOpen(false)} title="Action Item 등록">
+      <Modal open={aiModalOpen} onClose={() => setAiModalOpen(false)} title={aiEditingId ? "Action Item 수정" : "Action Item 등록"}>
         <div className="space-y-3">
           <div>
             <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">과제</label>
@@ -310,9 +357,53 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
             </div>
           )}
 
+          {!isHyeonup && (
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">요청일</label>
+                <input type="date" value={aiRequestDate} onChange={(e) => setAiRequestDate(e.target.value)} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">작업 시작일</label>
+                <input type="date" value={aiStartDate} onChange={(e) => setAiStartDate(e.target.value)} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">작업 종료(예상)</label>
+                <input type="date" value={aiEndDate} onChange={(e) => setAiEndDate(e.target.value)} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" />
+              </div>
+            </div>
+          )}
+
+          {!isHyeonup && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">진척률 (%)</label>
+                <input
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={aiProgress}
+                  onChange={(e) => setAiProgress(Math.max(0, Math.min(100, Number(e.target.value) || 0)))}
+                  className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">상태</label>
+                <select value={aiAiStatus} onChange={(e) => setAiAiStatus(e.target.value)} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100">
+                  {AI_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+                </select>
+              </div>
+            </div>
+          )}
+
+          <div>
+            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">작업 내용</label>
+            <textarea value={aiWorkContent} onChange={(e) => setAiWorkContent(e.target.value)} className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100" rows={3} />
+          </div>
+
           <div className="flex justify-end gap-2 pt-2">
             <button onClick={() => setAiModalOpen(false)} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 border dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">취소</button>
-            <button onClick={handleCreateActionItem} className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">등록</button>
+            <button onClick={handleCreateActionItem} className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">{aiEditingId ? "수정" : "등록"}</button>
           </div>
         </div>
       </Modal>

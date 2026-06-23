@@ -19,10 +19,13 @@ export function TaskCard({
     <div
       draggable={canEdit}
       onDragStart={canEdit ? (e) => onDragStart(e, task.id) : undefined}
-      className={`bg-white dark:bg-gray-700 rounded-lg border dark:border-gray-600 p-3 mb-2 shadow-sm hover:shadow-md transition-shadow ${canEdit ? "cursor-grab active:cursor-grabbing" : ""}`}
+      className={`group bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 px-3 py-2.5 mb-2 hover:border-gray-300 dark:hover:border-gray-600 transition-colors ${canEdit ? "cursor-grab active:cursor-grabbing" : ""}`}
     >
+      <div className="flex items-center gap-2 mb-1">
+        <span className="text-[10px] font-semibold tracking-wide text-blue-600 dark:text-blue-400 uppercase">Task</span>
+      </div>
       <div className="flex items-start justify-between gap-2">
-        <h4 className="font-medium text-base text-gray-900 dark:text-white flex-1">{task.title}</h4>
+        <h4 className="font-medium text-[13px] text-gray-900 dark:text-gray-100 flex-1 leading-snug">{task.title}</h4>
         {canEdit && (
           <div className="flex gap-1 shrink-0">
             <button
@@ -41,14 +44,14 @@ export function TaskCard({
         )}
       </div>
       {task.description && (
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{task.description}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 whitespace-pre-wrap">{task.description}</p>
       )}
       {task.assignee && (
-        <div className="mt-2 flex items-center gap-1">
-          <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 text-[10px] flex items-center justify-center font-medium">
+        <div className="mt-2.5 flex items-center gap-1.5">
+          <span className="w-5 h-5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-[10px] flex items-center justify-center font-medium border border-gray-200 dark:border-gray-600">
             {task.assignee.name[0]}
           </span>
-          <span className="text-xs text-gray-500 dark:text-gray-400">{task.assignee.name}</span>
+          <span className="text-[11px] text-gray-600 dark:text-gray-400">{task.assignee.name}</span>
         </div>
       )}
     </div>

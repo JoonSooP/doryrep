@@ -257,6 +257,16 @@ export function ActionItemList({ projectId }: { projectId: string }) {
   }
 
   const filteredBase = filterCategory ? items.filter((i) => i.category === filterCategory) : items;
+  const defaultSort = (a: ActionItem, b: ActionItem) => {
+    const keys: Array<keyof ActionItem> = ["category", "requestDate", "startDate", "endDate", "description"];
+    for (const k of keys) {
+      const av = (a[k] ?? "") as string;
+      const bv = (b[k] ?? "") as string;
+      if (av < bv) return -1;
+      if (av > bv) return 1;
+    }
+    return 0;
+  };
   const filtered = sortKey ? [...filteredBase].sort((a, b) => {
     let av: string | number; let bv: string | number;
     if (sortKey === "priority") { av = PRIORITY_ORDER[a.priority] ?? 9; bv = PRIORITY_ORDER[b.priority] ?? 9; }
@@ -265,7 +275,7 @@ export function ActionItemList({ projectId }: { projectId: string }) {
     if (av < bv) return sortAsc ? -1 : 1;
     if (av > bv) return sortAsc ? 1 : -1;
     return 0;
-  }) : filteredBase;
+  }) : [...filteredBase].sort(defaultSort);
 
   function exportExcel() {
     if (filtered.length === 0) { alert("내려받을 데이터가 없습니다."); return; }
@@ -323,8 +333,8 @@ export function ActionItemList({ projectId }: { projectId: string }) {
 
       <div className="overflow-x-auto border dark:border-gray-700 rounded-lg">
         <table className="w-full text-sm border-collapse min-w-[1500px] dark:text-gray-300">
-          <thead>
-            <tr className="bg-amber-100 dark:bg-amber-900/40 text-gray-700 dark:text-gray-200">
+          <thead className="sticky top-0 z-10">
+            <tr className="bg-amber-50 dark:bg-amber-900/20 text-gray-600 dark:text-gray-300">
               <th onClick={() => toggleSort("category")} className="border px-2 py-2 text-center w-28 cursor-pointer select-none hover:bg-amber-200 dark:hover:bg-amber-900/60">과제{sortIndicator("category")}</th>
               <th onClick={() => toggleSort("actionCategory")} className="border px-2 py-2 text-center w-28 cursor-pointer select-none hover:bg-amber-200 dark:hover:bg-amber-900/60">Category{sortIndicator("actionCategory")}</th>
               <th onClick={() => toggleSort("description")} className="border px-2 py-2 text-center min-w-[320px] cursor-pointer select-none hover:bg-amber-200 dark:hover:bg-amber-900/60">Action 설명{sortIndicator("description")}</th>
@@ -347,7 +357,7 @@ export function ActionItemList({ projectId }: { projectId: string }) {
                 style={rowHeights[item.id] ? { height: rowHeights[item.id] } : undefined}
                 onMouseDown={(e) => startRowResize(item.id, e)}
                 onMouseMove={rowCursor}
-                className="hover:bg-gray-50 dark:hover:bg-gray-700/50 focus-within:bg-blue-50/40 dark:focus-within:bg-blue-900/20 [&:focus-within_textarea]:min-h-[140px]">
+                className="hover:bg-gray-50/60 dark:hover:bg-gray-700/30 focus-within:bg-amber-50/40 dark:focus-within:bg-amber-900/10 [&:focus-within_textarea]:min-h-[140px]">
                 <td className="border dark:border-gray-700 px-1 py-1 text-center text-sm font-medium bg-gray-50 dark:bg-gray-800">
                   {canEdit ? (
                     <select
