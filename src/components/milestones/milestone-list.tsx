@@ -171,13 +171,23 @@ export function MilestoneList({ projectId }: { projectId: string }) {
   }, [parents]);
 
   const { weeks, months, rangeStart } = useMemo(() => {
-    const year = new Date().getFullYear();
-    const rStart = parseDate(`${year}-03-03`);
-    const rEnd = parseDate(`${year}-07-31`);
+    const dates: Date[] = [];
+    milestones.forEach((m) => {
+      if (m.startDate) { const d = parseDate(m.startDate); if (!isNaN(d.getTime())) dates.push(d); }
+      if (m.endDate) { const d = parseDate(m.endDate); if (!isNaN(d.getTime())) dates.push(d); }
+    });
+    let rStart: Date, rEnd: Date;
+    if (dates.length === 0) {
+      rStart = parseDate("2026-06-01");
+      rEnd = parseDate("2026-12-31");
+    } else {
+      rStart = new Date(Math.min(...dates.map((d) => d.getTime())));
+      rEnd = new Date(Math.max(...dates.map((d) => d.getTime())));
+    }
     const weeks = generateWeeks(rStart, rEnd);
     const months = groupByMonth(weeks);
     return { weeks, months, rangeStart: weeks[0]?.start ?? new Date() };
-  }, []);
+  }, [milestones]);
 
   const totalDays = weeks.length * 7;
 
