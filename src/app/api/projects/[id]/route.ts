@@ -1,8 +1,14 @@
 import { prisma } from "@/lib/db";
+import { getSession } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const me = await getSession();
+  if (me && me.role !== "Admin") {
+    const member = await prisma.projectMember.findUnique({ where: { userId_projectId: { userId: me.id, projectId: id } } });
+    if (!member) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
   const project = await prisma.project.findUnique({
     where: { id },
     include: {

@@ -10,6 +10,8 @@ import { DemoList } from "@/components/demos/demo-list";
 import { IssueList } from "@/components/issues/issue-list";
 import { ActionItemList } from "@/components/action-items/action-item-list";
 import { ActionItemGantt } from "@/components/action-items/action-item-gantt";
+import { ProjectMembers } from "@/components/projects/project-members";
+import { useAuth, useCanEdit } from "@/contexts/auth-context";
 
 type Tab = "milestone" | "weekly" | "action" | "actionGantt" | "kanban" | "issue" | "demo";
 
@@ -25,14 +27,30 @@ const TABS: { key: Tab; label: string }[] = [
 
 export default function ProjectPage() {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
+  const canEdit = useCanEdit();
+  const canManageMembers = canEdit || user?.role === "Admin";
   const [projectName, setProjectName] = useState("");
+  const [forbidden, setForbidden] = useState(false);
   const [tab, setTab] = useState<Tab>("milestone");
 
   useEffect(() => {
     fetch(`/api/projects/${id}`)
-      .then((r) => r.json())
-      .then((data) => setProjectName(data.name));
+      .then(async (r) => {
+        if (r.status === 403) { setForbidden(true); return null; }
+        return r.json();
+      })
+      .then((data) => { if (data) setProjectName(data.name); });
   }, [id]);
+
+  if (forbidden) {
+    return (
+      <div className="py-16 text-center">
+        <p className="text-lg text-gray-500 dark:text-gray-400 mb-1">접근 권한이 없습니다</p>
+        <p className="text-sm text-gray-400">이 프로젝트의 멤버가 아닙니다. Admin에게 문의하세요.</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -43,6 +61,8 @@ export default function ProjectPage() {
         <span className="text-gray-300 dark:text-gray-600">/</span>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{projectName}</h1>
       </div>
+
+      {canManageMembers && <ProjectMembers projectId={id} />}
 
       <div className="flex items-end gap-5 border-b border-gray-200 dark:border-gray-700 mb-6">
         {TABS.map((t) => (
