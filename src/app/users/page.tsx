@@ -33,6 +33,7 @@ export default function UsersPage() {
   const [userType, setUserType] = useState("프로젝트팀");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [allCategories, setAllCategories] = useState<string[]>([]);
+  const [groupedCategories, setGroupedCategories] = useState<{ projectId: string; projectName: string; categories: string[] }[]>([]);
   const [openCatRow, setOpenCatRow] = useState<string | null>(null);
   const [error, setError] = useState("");
 
@@ -43,6 +44,13 @@ export default function UsersPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(patch),
     });
+  };
+
+  const categoryProject = (cat: string) => {
+    for (const g of groupedCategories) {
+      if (g.categories.includes(cat)) return g.projectName;
+    }
+    return null;
   };
 
   const toggleRowCategory = (user: User, cat: string) => {
@@ -59,6 +67,10 @@ export default function UsersPage() {
     fetch("/api/categories")
       .then((r) => r.json())
       .then((d) => { if (Array.isArray(d)) setAllCategories(d); })
+      .catch(() => {});
+    fetch("/api/categories?grouped=1")
+      .then((r) => r.json())
+      .then((d) => { if (Array.isArray(d)) setGroupedCategories(d); })
       .catch(() => {});
   }, []);
 
@@ -215,9 +227,17 @@ export default function UsersPage() {
                   </td>
                   <td className="px-5 py-3 relative">
                     <div className="flex flex-wrap items-center gap-1">
-                      {(user.categories ? user.categories.split(",").map((s) => s.trim()).filter(Boolean) : []).map((c) => (
-                        <span key={c} className="text-xs px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">{c}</span>
-                      ))}
+                      {(user.categories ? user.categories.split(",").map((s) => s.trim()).filter(Boolean) : []).map((c) => {
+                        const proj = categoryProject(c);
+                        return (
+                          <span key={c} className="inline-flex items-center text-xs rounded bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 overflow-hidden">
+                            {proj && (
+                              <span className="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-[10px] text-blue-800 dark:text-blue-300">{proj}</span>
+                            )}
+                            <span className="px-1.5 py-0.5">{c}</span>
+                          </span>
+                        );
+                      })}
                       {isAdmin && (
                         <button
                           type="button"
@@ -229,31 +249,38 @@ export default function UsersPage() {
                       )}
                     </div>
                     {isAdmin && openCatRow === user.id && (
-                      <div className={`absolute z-20 left-5 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg p-3 min-w-[260px] ${
+                      <div className={`absolute z-20 left-5 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg p-3 min-w-[300px] max-h-72 overflow-y-auto ${
                         idx >= users.length - 2 ? "bottom-full mb-1" : "top-full mt-1"
                       }`}>
-                        {allCategories.length === 0 ? (
+                        {groupedCategories.length === 0 || groupedCategories.every((g) => g.categories.length === 0) ? (
                           <p className="text-xs text-gray-400">등록된 과제가 없습니다</p>
                         ) : (
-                          <div className="flex flex-wrap gap-1.5">
-                            {allCategories.map((c) => {
-                              const cats = user.categories ? user.categories.split(",").map((s) => s.trim()).filter(Boolean) : [];
-                              const active = cats.includes(c);
-                              return (
-                                <button
-                                  key={c}
-                                  type="button"
-                                  onClick={() => toggleRowCategory(user, c)}
-                                  className={`text-xs px-2 py-1 rounded border transition-colors ${
-                                    active
-                                      ? "bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-400"
-                                      : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
-                                  }`}
-                                >
-                                  {c}
-                                </button>
-                              );
-                            })}
+                          <div className="space-y-3">
+                            {groupedCategories.filter((g) => g.categories.length > 0).map((g) => (
+                              <div key={g.projectId}>
+                                <div className="text-[11px] font-semibold text-gray-500 dark:text-gray-400 mb-1.5">{g.projectName}</div>
+                                <div className="flex flex-wrap gap-1.5">
+                                  {g.categories.map((c) => {
+                                    const cats = user.categories ? user.categories.split(",").map((s) => s.trim()).filter(Boolean) : [];
+                                    const active = cats.includes(c);
+                                    return (
+                                      <button
+                                        key={c}
+                                        type="button"
+                                        onClick={() => toggleRowCategory(user, c)}
+                                        className={`text-xs px-2 py-1 rounded border transition-colors ${
+                                          active
+                                            ? "bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-400"
+                                            : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                        }`}
+                                      >
+                                        {c}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         )}
                         <div className="flex justify-end mt-2">
@@ -352,23 +379,30 @@ export default function UsersPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">담당과제</label>
-            {allCategories.length === 0 ? (
+            {groupedCategories.length === 0 || groupedCategories.every((g) => g.categories.length === 0) ? (
               <p className="text-xs text-gray-400">등록된 과제가 없습니다 (프로젝트 일정의 대분류가 과제 목록입니다)</p>
             ) : (
-              <div className="flex flex-wrap gap-2">
-                {allCategories.map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    onClick={() => toggleCategory(c)}
-                    className={`px-3 py-1.5 text-xs rounded-lg border transition-colors ${
-                      selectedCategories.includes(c)
-                        ? "bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-400 font-medium"
-                        : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
-                    }`}
-                  >
-                    {c}
-                  </button>
+              <div className="space-y-3 max-h-72 overflow-y-auto border dark:border-gray-700 rounded-lg p-3">
+                {groupedCategories.filter((g) => g.categories.length > 0).map((g) => (
+                  <div key={g.projectId}>
+                    <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">{g.projectName}</div>
+                    <div className="flex flex-wrap gap-2">
+                      {g.categories.map((c) => (
+                        <button
+                          key={c}
+                          type="button"
+                          onClick={() => toggleCategory(c)}
+                          className={`px-3 py-1.5 text-xs rounded-lg border transition-colors ${
+                            selectedCategories.includes(c)
+                              ? "bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-400 font-medium"
+                              : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
+                          }`}
+                        >
+                          {c}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             )}
