@@ -85,10 +85,10 @@ export default function ProjectPage() {
 
       {tab === "milestone" && <MilestoneList projectId={id} />}
       {tab === "weekly" && <WeeklyReport projectId={id} onNavigateToIssue={() => setTab("issue")} />}
-      {tab === "action" && <ActionItemList projectId={id} />}
-      {tab === "actionGantt" && <ActionItemGantt projectId={id} />}
+      <div style={{ display: tab === "action" ? "block" : "none" }}><ActionItemList projectId={id} /></div>
+      <div style={{ display: tab === "actionGantt" ? "block" : "none" }}><ActionItemGantt projectId={id} /></div>
       {tab === "issue" && <IssueList projectId={id} />}
-      {tab === "kanban" && <KanbanBoard projectId={id} />}
+      <div style={{ display: tab === "kanban" ? "block" : "none" }}><KanbanBoard projectId={id} /></div>
       {tab === "demo" && <DemoList projectId={id} />}
     </div>
   );
