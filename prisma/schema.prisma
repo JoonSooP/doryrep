@@ -15,7 +15,6 @@ model User {
   password           String
   role               String   @default("Viewer")
   userType           String   @default("프로젝트팀")
-  categories         String   @default("")
   mustChangePassword Boolean  @default(true)
   avatar             String?
   tasks              Task[]

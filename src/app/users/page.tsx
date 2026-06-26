@@ -11,7 +11,6 @@ type User = {
   email: string;
   role: string;
   userType: string;
-  categories: string;
   mustChangePassword: boolean;
   _count?: { tasks: number };
 };
@@ -31,10 +30,6 @@ export default function UsersPage() {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("Viewer");
   const [userType, setUserType] = useState("프로젝트팀");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [allCategories, setAllCategories] = useState<string[]>([]);
-  const [groupedCategories, setGroupedCategories] = useState<{ projectId: string; projectName: string; categories: string[] }[]>([]);
-  const [openCatRow, setOpenCatRow] = useState<string | null>(null);
   const [error, setError] = useState("");
 
   const patchUser = async (id: string, patch: Partial<User>) => {
@@ -46,42 +41,15 @@ export default function UsersPage() {
     });
   };
 
-  const categoryProject = (cat: string) => {
-    for (const g of groupedCategories) {
-      if (g.categories.includes(cat)) return g.projectName;
-    }
-    return null;
-  };
-
-  const toggleRowCategory = (user: User, cat: string) => {
-    const current = user.categories ? user.categories.split(",").map((s) => s.trim()).filter(Boolean) : [];
-    const next = current.includes(cat) ? current.filter((c) => c !== cat) : [...current, cat];
-    patchUser(user.id, { categories: next.join(",") });
-  };
-
   const load = () => {
     fetch("/api/users").then((r) => r.json()).then(setUsers);
   };
   useEffect(() => { load(); }, []);
-  useEffect(() => {
-    fetch("/api/categories")
-      .then((r) => r.json())
-      .then((d) => { if (Array.isArray(d)) setAllCategories(d); })
-      .catch(() => {});
-    fetch("/api/categories?grouped=1")
-      .then((r) => r.json())
-      .then((d) => { if (Array.isArray(d)) setGroupedCategories(d); })
-      .catch(() => {});
-  }, []);
-
-  const toggleCategory = (c: string) => {
-    setSelectedCategories((prev) => prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c]);
-  };
 
   const openCreate = () => {
     setEditingUser(null);
     setLoginId(""); setName(""); setEmail(""); setRole("Viewer");
-    setUserType("프로젝트팀"); setSelectedCategories([]); setError("");
+    setUserType("프로젝트팀"); setError("");
     setModalOpen(true);
   };
 
@@ -89,7 +57,6 @@ export default function UsersPage() {
     setEditingUser(user);
     setLoginId(user.loginId); setName(user.name); setEmail(user.email); setRole(user.role);
     setUserType(user.userType || "프로젝트팀");
-    setSelectedCategories(user.categories ? user.categories.split(",").map((s) => s.trim()).filter(Boolean) : []);
     setError("");
     setModalOpen(true);
   };
@@ -99,19 +66,18 @@ export default function UsersPage() {
     if (!loginId.trim() || !name.trim()) return;
     setError("");
 
-    const categoriesStr = selectedCategories.join(",");
     if (editingUser) {
       const res = await fetch(`/api/users/${editingUser.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), email: email.trim() || loginId.trim(), role, userType, categories: categoriesStr }),
+        body: JSON.stringify({ name: name.trim(), email: email.trim() || loginId.trim(), role, userType }),
       });
       if (!res.ok) { setError((await res.json()).error || "수정 실패"); return; }
     } else {
       const res = await fetch("/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ loginId: loginId.trim(), name: name.trim(), email: email.trim() || loginId.trim(), role, userType, categories: categoriesStr }),
+        body: JSON.stringify({ loginId: loginId.trim(), name: name.trim(), email: email.trim() || loginId.trim(), role, userType }),
       });
       if (!res.ok) { setError((await res.json()).error || "생성 실패"); return; }
     }
@@ -165,7 +131,6 @@ export default function UsersPage() {
                 <th className="px-5 py-3 font-medium">이름</th>
                 <th className="px-5 py-3 font-medium text-center">권한</th>
                 <th className="px-5 py-3 font-medium text-center">역할</th>
-                <th className="px-5 py-3 font-medium">담당과제</th>
                 <th className="px-5 py-3 font-medium text-center">PW 상태</th>
                 <th className="px-5 py-3 font-medium text-center">배정 태스크</th>
                 {isAdmin && <th className="px-5 py-3 font-medium text-right">관리</th>}
@@ -223,70 +188,6 @@ export default function UsersPage() {
                           ? "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400"
                           : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400"
                       }`}>{user.userType || "프로젝트팀"}</span>
-                    )}
-                  </td>
-                  <td className="px-5 py-3 relative">
-                    <div className="flex flex-wrap items-center gap-1">
-                      {(user.categories ? user.categories.split(",").map((s) => s.trim()).filter(Boolean) : []).map((c) => {
-                        const proj = categoryProject(c);
-                        return (
-                          <span key={c} className="inline-flex items-center text-xs rounded bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 overflow-hidden">
-                            {proj && (
-                              <span className="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-[10px] text-blue-800 dark:text-blue-300">{proj}</span>
-                            )}
-                            <span className="px-1.5 py-0.5">{c}</span>
-                          </span>
-                        );
-                      })}
-                      {isAdmin && (
-                        <button
-                          type="button"
-                          onClick={() => setOpenCatRow(openCatRow === user.id ? null : user.id)}
-                          className="text-xs px-2 py-0.5 rounded border border-dashed border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
-                        >
-                          편집
-                        </button>
-                      )}
-                    </div>
-                    {isAdmin && openCatRow === user.id && (
-                      <div className={`absolute z-20 left-5 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg p-3 min-w-[300px] max-h-72 overflow-y-auto ${
-                        idx >= users.length - 2 ? "bottom-full mb-1" : "top-full mt-1"
-                      }`}>
-                        {groupedCategories.length === 0 || groupedCategories.every((g) => g.categories.length === 0) ? (
-                          <p className="text-xs text-gray-400">등록된 과제가 없습니다</p>
-                        ) : (
-                          <div className="space-y-3">
-                            {groupedCategories.filter((g) => g.categories.length > 0).map((g) => (
-                              <div key={g.projectId}>
-                                <div className="text-[11px] font-semibold text-gray-500 dark:text-gray-400 mb-1.5">{g.projectName}</div>
-                                <div className="flex flex-wrap gap-1.5">
-                                  {g.categories.map((c) => {
-                                    const cats = user.categories ? user.categories.split(",").map((s) => s.trim()).filter(Boolean) : [];
-                                    const active = cats.includes(c);
-                                    return (
-                                      <button
-                                        key={c}
-                                        type="button"
-                                        onClick={() => toggleRowCategory(user, c)}
-                                        className={`text-xs px-2 py-1 rounded border transition-colors ${
-                                          active
-                                            ? "bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-400"
-                                            : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
-                                        }`}
-                                      >
-                                        {c}
-                                      </button>
-                                    );
-                                  })}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                        <div className="flex justify-end mt-2">
-                          <button onClick={() => setOpenCatRow(null)} className="text-xs text-gray-500 hover:text-gray-700">닫기</button>
-                        </div>
-                      </div>
                     )}
                   </td>
                   <td className="px-5 py-3 text-center">
@@ -376,36 +277,6 @@ export default function UsersPage() {
                 </button>
               ))}
             </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">담당과제</label>
-            {groupedCategories.length === 0 || groupedCategories.every((g) => g.categories.length === 0) ? (
-              <p className="text-xs text-gray-400">등록된 과제가 없습니다 (프로젝트 일정의 대분류가 과제 목록입니다)</p>
-            ) : (
-              <div className="space-y-3 max-h-72 overflow-y-auto border dark:border-gray-700 rounded-lg p-3">
-                {groupedCategories.filter((g) => g.categories.length > 0).map((g) => (
-                  <div key={g.projectId}>
-                    <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">{g.projectName}</div>
-                    <div className="flex flex-wrap gap-2">
-                      {g.categories.map((c) => (
-                        <button
-                          key={c}
-                          type="button"
-                          onClick={() => toggleCategory(c)}
-                          className={`px-3 py-1.5 text-xs rounded-lg border transition-colors ${
-                            selectedCategories.includes(c)
-                              ? "bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-400 font-medium"
-                              : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
-                          }`}
-                        >
-                          {c}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
           <div className="flex justify-end gap-2 pt-2">
             <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">취소</button>

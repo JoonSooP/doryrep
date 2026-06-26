@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useAuth, useCanEdit } from "@/contexts/auth-context";
+import { useCanEdit } from "@/contexts/auth-context";
 import type { ActionItem } from "@/types";
 
 const DAY_MS = 86400000;
@@ -32,13 +32,11 @@ function toISO(d: Date) {
 }
 
 export function ActionItemGantt({ projectId }: { projectId: string }) {
-  const { user } = useAuth();
   const canEdit = useCanEdit();
   const trackRef = useRef<HTMLDivElement>(null);
   const [items, setItems] = useState<ActionItem[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [filterCategory, setFilterCategory] = useState<string>("");
-  const filterInit = useRef(false);
   const [loading, setLoading] = useState(true);
   const [draggingId, setDraggingId] = useState<string | null>(null);
 
@@ -59,16 +57,6 @@ export function ActionItemGantt({ projectId }: { projectId: string }) {
       .catch(() => {});
   }, [projectId]);
 
-  useEffect(() => {
-    if (filterInit.current) return;
-    const my = (user?.categories ?? "").split(",").map((s) => s.trim()).filter(Boolean);
-    if (my.length === 1) {
-      setFilterCategory(my[0]);
-      filterInit.current = true;
-    } else if (user) {
-      filterInit.current = true;
-    }
-  }, [user]);
 
   const filteredBase = filterCategory ? items.filter((i) => i.category === filterCategory) : items;
   const filtered = [...filteredBase].sort((a, b) => {

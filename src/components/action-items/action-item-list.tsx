@@ -90,7 +90,6 @@ export function ActionItemList({ projectId }: { projectId: string }) {
   const isHyeonup = user?.userType === "현업";
   const canEdit = canEditBase || isHyeonup;
   const canEditRestricted = canEditBase && !isHyeonup;
-  const myCategories = (user?.categories ?? "").split(",").map((s) => s.trim()).filter(Boolean);
   const [items, setItems] = useState<ActionItem[]>([]);
   const [users, setUsers] = useState<UserOption[]>([]);
   const [loading, setLoading] = useState(true);
@@ -127,7 +126,6 @@ export function ActionItemList({ projectId }: { projectId: string }) {
   }
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
-  const filterInit = useRef(false);
 
   function toggleSort(k: SortKey) {
     if (sortKey === k) setSortAsc(!sortAsc);
@@ -165,14 +163,6 @@ export function ActionItemList({ projectId }: { projectId: string }) {
   }, [projectId]);
 
   useEffect(() => { load(); }, [load]);
-
-  useEffect(() => {
-    if (filterInit.current) return;
-    if (myCategories.length === 1) {
-      setFilterCategory(myCategories[0]);
-      filterInit.current = true;
-    }
-  }, [myCategories]);
 
   useEffect(() => {
     fetch(`/api/milestones/categories?projectId=${projectId}`)

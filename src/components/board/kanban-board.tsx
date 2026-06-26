@@ -59,7 +59,6 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
   const [aiAiStatus, setAiAiStatus] = useState<string>("Open");
   const [aiEditingId, setAiEditingId] = useState<string | null>(null);
   const [filterCategory, setFilterCategory] = useState<string>("");
-  const filterInit = useRef(false);
   const draggingId = useRef<string | null>(null);
   const draggingKind = useRef<"task" | "action">("task");
 
@@ -85,15 +84,6 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
   const visibleActionItems = filterCategory ? actionItems.filter((i) => i.category === filterCategory) : actionItems;
   const actionItemsByStatus = (s: TaskStatus) =>
     visibleActionItems.filter((i) => (AI_STATUS_TO_KANBAN[i.status] ?? "TODO") === s);
-
-  useEffect(() => {
-    if (filterInit.current) return;
-    const my = (user?.categories ?? "").split(",").map((s) => s.trim()).filter(Boolean);
-    if (my.length === 1) {
-      setFilterCategory(my[0]);
-      filterInit.current = true;
-    }
-  }, [user]);
 
   const handleDragStart = (_e: React.DragEvent, taskId: string) => {
     draggingId.current = taskId;
