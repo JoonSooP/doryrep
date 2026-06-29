@@ -138,6 +138,8 @@ export function MilestoneList({ projectId }: { projectId: string }) {
   const [priority, setPriority] = useState("중");
   const [progress, setProgress] = useState(0);
   const [parentId, setParentId] = useState("");
+  const [viewStartMonth, setViewStartMonth] = useState("");
+  const [viewEndMonth, setViewEndMonth] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const leftRef = useRef<HTMLDivElement>(null);
   const todayRef = useRef<HTMLDivElement>(null);
@@ -184,17 +186,24 @@ export function MilestoneList({ projectId }: { projectId: string }) {
       rStart = new Date(Math.min(...dates.map((d) => d.getTime())));
       rEnd = new Date(Math.max(...dates.map((d) => d.getTime())));
     }
+    if (viewStartMonth) {
+      const [y, m] = viewStartMonth.split("-").map(Number);
+      rStart = new Date(y, m - 1, 1);
+    }
+    if (viewEndMonth) {
+      const [y, m] = viewEndMonth.split("-").map(Number);
+      rEnd = new Date(y, m, 0);
+    }
+    if (rEnd < rStart) rEnd = new Date(rStart);
     const weeks = generateWeeks(rStart, rEnd);
     const months = groupByMonth(weeks);
     return { weeks, months, rangeStart: weeks[0]?.start ?? new Date() };
-  }, [milestones]);
+  }, [milestones, viewStartMonth, viewEndMonth]);
 
   const totalDays = weeks.length * 7;
 
   useEffect(() => {
-    if (todayRef.current && scrollRef.current) {
-      scrollRef.current.scrollLeft = Math.max(0, todayRef.current.offsetLeft - 200);
-    }
+    if (scrollRef.current) scrollRef.current.scrollLeft = 0;
   }, [weeks]);
 
   const handleScroll = (source: "left" | "right") => {
@@ -376,13 +385,39 @@ export function MilestoneList({ projectId }: { projectId: string }) {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-sm text-gray-400">{milestones.length}개 항목</span>
-        {canEdit && (
-          <button onClick={() => openCreate()} className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
-            + 과제 추가
-          </button>
-        )}
+      <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-400">{milestones.length}개 항목</span>
+        </div>
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-gray-500 dark:text-gray-400">조회 기간:</span>
+          <input
+            type="month"
+            value={viewStartMonth}
+            onChange={(e) => setViewStartMonth(e.target.value)}
+            className="border dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-700 dark:text-gray-100"
+          />
+          <span className="text-gray-400">~</span>
+          <input
+            type="month"
+            value={viewEndMonth}
+            onChange={(e) => setViewEndMonth(e.target.value)}
+            className="border dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-700 dark:text-gray-100"
+          />
+          {(viewStartMonth || viewEndMonth) && (
+            <button
+              onClick={() => { setViewStartMonth(""); setViewEndMonth(""); }}
+              className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 px-2 py-1 border dark:border-gray-600 rounded"
+            >
+              자동
+            </button>
+          )}
+          {canEdit && (
+            <button onClick={() => openCreate()} className="ml-2 px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
+              + 과제 추가
+            </button>
+          )}
+        </div>
       </div>
 
       {milestones.length === 0 ? (
@@ -391,7 +426,7 @@ export function MilestoneList({ projectId }: { projectId: string }) {
           <p className="text-sm">WBS 항목을 추가해 보세요</p>
         </div>
       ) : (
-        <div className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl overflow-hidden flex select-none">
+        <div className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl overflow-hidden flex w-full select-none">
           {/* 왼쪽 고정 */}
           <div
             ref={leftRef}
@@ -424,8 +459,8 @@ export function MilestoneList({ projectId }: { projectId: string }) {
           </div>
 
           {/* 오른쪽 간트 */}
-          <div ref={scrollRef} className="flex-1 overflow-hidden" onScroll={() => handleScroll("right")}>
-            <div style={{ width: "100%" }}>
+          <div ref={scrollRef} className="flex-1 min-w-0 overflow-hidden" onScroll={() => handleScroll("right")}>
+            <div className="w-full">
               <div className="flex border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900" style={{ height: 24 }}>
                 {months.map((m, i) => (
                   <div key={i} className="text-center text-sm font-bold text-gray-700 dark:text-gray-300 border-r border-gray-200 dark:border-gray-700 flex items-center justify-center" style={{ width: `${(m.weeks / weeks.length) * 100}%` }}>
